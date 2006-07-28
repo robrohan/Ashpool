@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<project name="Ashpool" default="jar_no_scripting" basedir=".">
+	
+	<property name="debug" value="false"/>
+	<property name="optimize" value="true"/>
+	<property name="libdir" value="."/>
+	
+	<!-- compile all the needed files -->
+	<target name="build">
+		<javac 
+			target="1.4" 
+			source="1.4"
+			srcdir="."
+			debug="${debug}"
+			optimize="${optimize}"
+			includes="**/*.java"
+			classpath="${libdir}/bsf.jar:${libdir}/js.jar:./"
+		/>
+	</target>
+
+	<!-- create an Ashpool jar without the bsf.jar and js.jar
+		built into the jar (smaller file but no scripting unless
+		you add the two to the classpath -->
+	<target name="jar_no_scripting" depends="build">
+		<!-- includes="**/*.class" -->
+		<jar destfile="Ashpool.jar" 
+			basedir="."
+			manifest="Ashpool.manifest"
+		>
+			<include name="com/**/*.class"/>
+			<exclude name="com/ibm/**/*.class"/>
+			<include name="net/**/*.class"/>
+			<exclude name="com/rohanclan/crypto/**/*.class"/>
+		</jar>
+	</target>
+
+	<!-- create an Ashpool jar with the bsf and js jars in it.
+		makes a larger file, but scripting makes ashpool cool :) -->
+	<target name="jar_with_scripting" depends="build">
+		<jar destfile="Ashpool.jar" 
+			basedir="."
+			manifest="Ashpool.manifest"
+		>
+			<include name="com/**/*.class"/>
+			<include name="com/**/*.properties"/>
+			<include name="net/**/*.class"/>
+			<include name="org/**/*.class"/>
+			<include name="org/**/*.properties"/>
+			<!-- <exclude name="com/rohanclan/crypto/**/*.class"/> -->
+		</jar>
+	</target>
+
+	<!-- create an Ashpool jar with the bsf and js jars in it.
+		makes a larger file, but scripting makes ashpool cool :) -->
+	<!-- <target name="jar_with_scripting_and_crypto" depends="build">
+		<jar destfile="Ashpool.jar" 
+			basedir="."
+			manifest="Ashpool.manifest"
+		>
+			<include name="com/**/*.class"/>
+			<include name="com/**/*.properties"/>
+			<include name="net/**/*.class"/>
+			<include name="org/**/*.class"/>
+			<include name="org/**/*.properties"/>
+		</jar>
+	</target> -->
+
+	<!-- remove all the class files -->
+ 	<target name="clean" description="clean up" >
+		<delete>
+			<fileset dir="." includes="com/rohanclan/ashpool/**/*.class" />
+		</delete>
+	</target>
+</project>
