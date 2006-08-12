@@ -3,14 +3,14 @@
 	
 	<property name="debug" value="false"/>
 	<property name="optimize" value="true"/>
-	<property name="libdir" value="."/>
+	<property name="libdir" value="lib"/>
 	
 	<!-- compile all the needed files -->
 	<target name="build">
 		<javac 
 			target="1.4" 
 			source="1.4"
-			srcdir="."
+			srcdir="src"
 			debug="${debug}"
 			optimize="${optimize}"
 			includes="**/*.java"
@@ -24,7 +24,7 @@
 	<target name="jar_no_scripting" depends="build">
 		<!-- includes="**/*.class" -->
 		<jar destfile="Ashpool.jar" 
-			basedir="."
+			basedir="src"
 			manifest="Ashpool.manifest"
 		>
 			<include name="com/**/*.class"/>
@@ -35,10 +35,10 @@
 	</target>
 
 	<!-- create an Ashpool jar with the bsf and js jars in it.
-		makes a larger file, but scripting makes ashpool cool :) -->
+		makes a larger file, but scripting makes ashpool cool :) 
 	<target name="jar_with_scripting" depends="build">
 		<jar destfile="Ashpool.jar" 
-			basedir="."
+			basedir="src"
 			manifest="Ashpool.manifest"
 		>
 			<include name="com/**/*.class"/>
@@ -46,9 +46,8 @@
 			<include name="net/**/*.class"/>
 			<include name="org/**/*.class"/>
 			<include name="org/**/*.properties"/>
-			<!-- <exclude name="com/rohanclan/crypto/**/*.class"/> -->
 		</jar>
-	</target>
+	</target> -->
 
 	<!-- create an Ashpool jar with the bsf and js jars in it.
 		makes a larger file, but scripting makes ashpool cool :) -->
@@ -68,7 +67,7 @@
 	<!-- remove all the class files -->
  	<target name="clean" description="clean up" >
 		<delete>
-			<fileset dir="." includes="com/rohanclan/ashpool/**/*.class" />
+			<fileset dir="bin" includes="com/rohanclan/ashpool/**/*.class" />
 		</delete>
 	</target>
 </project>
