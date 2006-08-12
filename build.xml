@@ -11,6 +11,7 @@
 			target="1.4" 
 			source="1.4"
 			srcdir="src"
+			destdir="bin"
 			debug="${debug}"
 			optimize="${optimize}"
 			includes="**/*.java"
@@ -24,7 +25,7 @@
 	<target name="jar_no_scripting" depends="build">
 		<!-- includes="**/*.class" -->
 		<jar destfile="Ashpool.jar" 
-			basedir="src"
+			basedir="bin"
 			manifest="Ashpool.manifest"
 		>
 			<include name="com/**/*.class"/>
