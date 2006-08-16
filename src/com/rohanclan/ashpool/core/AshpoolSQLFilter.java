@@ -27,6 +27,8 @@
 
 package com.rohanclan.ashpool.core;
 
+import com.rohanclan.ashpool.core.xml.BasicXSLEngine;
+
 /**
  *
  * @author  rob

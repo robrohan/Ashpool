@@ -27,8 +27,11 @@
 
 package com.rohanclan.ashpool.jdbc;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.rohanclan.ashpool.core.AResultSet;
 import com.rohanclan.ashpool.core.Functions;
@@ -1531,15 +1534,15 @@ public class MetaData implements java.sql.DatabaseMetaData {
 	 * @exception SQLException if a database access error occurs
 	 *
 	 */
-	public java.sql.ResultSet getTableTypes() throws SQLException {
+	public ResultSet getTableTypes() throws SQLException {
 		AResultSet rs = new AResultSet();
-		java.util.List vTable  = new java.util.ArrayList();
+		List<Object> vTable  = new ArrayList<Object>();
 		
 		vTable.add("TABLE");
 		vTable.add("LOCAL TEMPORARY");
 		vTable.add("SYSTEM TABLE");
 		//vTable.add("LOCAL TEMPORARY");
-		rs.addColumn("TABLE_TYPE", vTable, java.sql.Types.VARCHAR);
+		rs.addColumn("TABLE_TYPE", vTable, Types.VARCHAR);
 		return rs;
 	}
 	

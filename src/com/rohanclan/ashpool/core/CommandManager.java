@@ -28,12 +28,19 @@ package com.rohanclan.ashpool.core;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.rohanclan.ashpool.cmds.Import;
 import com.rohanclan.ashpool.cmds.RunBSF;
+import com.rohanclan.ashpool.core.filter.CreateFilter;
+import com.rohanclan.ashpool.core.filter.DeleteFilter;
+import com.rohanclan.ashpool.core.filter.InsertFilter;
+import com.rohanclan.ashpool.core.filter.SelectFilter;
+import com.rohanclan.ashpool.core.filter.UpdateFilter;
+import com.rohanclan.ashpool.core.xml.BasicXSLEngine;
 
 /**
  * Tries to figure out what the requested action really wants, and most often
@@ -63,8 +70,8 @@ public class CommandManager
 	private TableManager tableman;
 	
 	/** local and global variables */
-	private Map variables;
-	private static Map globalvariables;
+	private Map<String,Object> variables;
+	private static Map<String,Object> globalvariables;
 	
 	private RunBSF bsf = null;
 	
@@ -75,12 +82,12 @@ public class CommandManager
 		bXSL = new BasicXSLEngine();
 		
 		//new local variable scope
-		variables = new java.util.HashMap();
+		variables = new HashMap<String, Object>();
 		
 		//if no global scope, make one
 		if(globalvariables == null)
 		{
-			globalvariables = new java.util.HashMap();
+			globalvariables = new HashMap<String,Object>();
 			//system specific variables
 			globalvariables.put("SYS:DEBUG",new Boolean(false));
 			globalvariables.put("SYS:STATS",new Boolean(true));
@@ -468,8 +475,8 @@ public class CommandManager
 					
 					}else if(query.toLowerCase().trim().equals("select env")){
 						queryresults.reset();
-						List names = new ArrayList(variables.keySet());
-						List values = new ArrayList(variables.values());
+						List<Object> names = new ArrayList<Object>(variables.keySet());
+						List<Object> values = new ArrayList<Object>(variables.values());
 						//List names = new ArrayList(globalvariables.keySet());
 						//List values = new ArrayList(globalvariables.values());
 						queryresults.addColumn("name", names, java.sql.Types.VARCHAR);

@@ -25,9 +25,13 @@
  * Created on 2003-05-04
  */
 
-package com.rohanclan.ashpool.core;
+package com.rohanclan.ashpool.core.filter;
 
 import java.util.*;
+
+import com.rohanclan.ashpool.core.CommandManager;
+import com.rohanclan.ashpool.core.Functions;
+import com.rohanclan.ashpool.core.TableManager;
 
 /**
  * Builds the where section of the xpath - this is a monster :)

@@ -29,6 +29,9 @@ package com.rohanclan.ashpool.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 /** This class handles most of the IO stuff for Ashpool. For example, table moving
  * table renaming, getting an InputStream from a table, etc
@@ -329,10 +332,10 @@ public class TableManager {
 		//    </UL>
 		//</OL>
 		
-		java.util.List vProc  = new java.util.ArrayList();
-		java.util.List vRemark = new java.util.ArrayList();
-		java.util.List vType   = new java.util.ArrayList();
-		java.util.List vNull   = new java.util.ArrayList();
+		List<Object> vProc  = new ArrayList<Object>();
+		List<Object> vRemark = new ArrayList<Object>();
+		List<Object> vType   = new ArrayList<Object>();
+		List<Object> vNull   = new ArrayList<Object>();
 		
 		File list[] = getFileTables();
 		
@@ -350,11 +353,11 @@ public class TableManager {
 			}
 		}
 		
-		rs.addColumn("PROCEDURE_CAT", 	vNull, 		java.sql.Types.VARCHAR);
-		rs.addColumn("PROCEDURE_SCHEM", vNull, 		java.sql.Types.VARCHAR);
-		rs.addColumn("PROCEDURE_NAME", 	vProc, 		java.sql.Types.VARCHAR);
-		rs.addColumn("REMARKS", 		vRemark,	java.sql.Types.VARCHAR);
-		rs.addColumn("PROCEDURE_TYPE",	vType, 		java.sql.Types.SMALLINT);
+		rs.addColumn("PROCEDURE_CAT", 	vNull, 		Types.VARCHAR);
+		rs.addColumn("PROCEDURE_SCHEM", vNull, 		Types.VARCHAR);
+		rs.addColumn("PROCEDURE_NAME", 	vProc, 		Types.VARCHAR);
+		rs.addColumn("REMARKS", 		vRemark,	Types.VARCHAR);
+		rs.addColumn("PROCEDURE_TYPE",	vType, 		Types.SMALLINT);
 	}
 	
 	/** returns the (possible) tables in this datastore
@@ -382,18 +385,18 @@ public class TableManager {
 		
 		//String validtable = "X";
 		
-		java.util.List getTypes = new java.util.ArrayList();
+		List<Object> getTypes = new ArrayList<Object>();
 		if(types != null){
 			for(int i = 0; i < types.length; i++){
 				getTypes.add(types[i]);
 			}
 		}
 		
-		java.util.List vTable  = new java.util.ArrayList();
-		java.util.List vSchema = new java.util.ArrayList();
-		java.util.List vName   = new java.util.ArrayList();
-		java.util.List vSize   = new java.util.ArrayList();
-		java.util.List vNull   = new java.util.ArrayList();
+		List<Object> vTable  = new ArrayList<Object>();
+		List<Object> vSchema = new ArrayList<Object>();
+		List<Object> vName   = new ArrayList<Object>();
+		List<Object> vSize   = new ArrayList<Object>();
+		List<Object> vNull   = new ArrayList<Object>();
 		
 		File list[] = getFileTables();
 		

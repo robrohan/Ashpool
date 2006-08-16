@@ -25,9 +25,14 @@
  * Created on 2003-05-04
  */
 
-package com.rohanclan.ashpool.core;
+package com.rohanclan.ashpool.core.filter;
 
 import java.util.*;
+
+import com.rohanclan.ashpool.core.AshpoolException;
+import com.rohanclan.ashpool.core.CommandManager;
+import com.rohanclan.ashpool.core.Functions;
+import com.rohanclan.ashpool.core.TableManager;
 
 /**
  * Builds the column section of the xpath used mostly in selects
@@ -38,8 +43,8 @@ public class ColumnFilter extends SQLFilter{
 	private SelectFilter subS;  //for sub-selects 
 	private boolean doDistinct;
 	private String limit;
-	private List fieldDis;
-	private List fieldVal;
+	private List<String> fieldDis;
+	private List<String> fieldVal;
 	
 	public ColumnFilter(TableManager tableman, CommandManager comman) throws Exception{
 		super(tableman, comman);
@@ -81,8 +86,8 @@ public class ColumnFilter extends SQLFilter{
 		doDistinct = false;
 		limit = "";
 		
-		fieldDis = new ArrayList(); //field display (the AS .... part)
-		fieldVal = new ArrayList(); //field value (what to select)
+		fieldDis = new ArrayList<String>(); //field display (the AS .... part)
+		fieldVal = new ArrayList<String>(); //field value (what to select)
 		
 		String fieldnames="";
 		//while(!fieldnames.toLowerCase().equals("from")){

@@ -27,7 +27,9 @@
 
 package com.rohanclan.ashpool.core;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This is a column object. An AResultSet object is make up of one or more of
  * these.
@@ -37,15 +39,15 @@ import java.util.*;
 public class ResultColumn {
 	public String columnName;
 	public int type;
-	public List columnData;
+	public List<Object> columnData;
 	
 	/** Creates a new instance of resultColumn */
 	public ResultColumn() {
-		columnData = new ArrayList();
+		columnData = new ArrayList<Object>();
 	}
 	
 	public ResultColumn(int capacity){
-		columnData = new ArrayList(capacity);
+		columnData = new ArrayList<Object>(capacity);
 	}
 	
 	public int getType(){
@@ -55,5 +57,4 @@ public class ResultColumn {
 	public void setType(int sqltype){
 		this.type = sqltype;
 	}
-	
 }

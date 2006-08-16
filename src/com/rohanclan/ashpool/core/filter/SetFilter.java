@@ -25,9 +25,14 @@
  * Created on 2003-05-04
  */
 
-package com.rohanclan.ashpool.core;
+package com.rohanclan.ashpool.core.filter;
 
-import java.util.*;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import com.rohanclan.ashpool.core.AshpoolException;
+import com.rohanclan.ashpool.core.CommandManager;
+import com.rohanclan.ashpool.core.TableManager;
 
 /**
  * Builds the where section of the xpath
@@ -44,7 +49,7 @@ public class SetFilter extends SQLFilter{
 	
 	/** parses the sql fragment and tries to populate the passed
 		Lists with the columnnames and values */
-	public void getColumnsAndValues(String sql, List insertColumnNames, List insertColumnValues) 
+	public void getColumnsAndValues(String sql, List<String> insertColumnNames, List<String> insertColumnValues) 
 		throws AshpoolException{
 		//the next bit expects the sql fragment to have a 'where' at the end
 		//so we'll tack one on - this should probably change eventually.

@@ -25,9 +25,13 @@
  * Created on 2003-05-04
  */
 
-package com.rohanclan.ashpool.core;
+package com.rohanclan.ashpool.core.filter;
 
 import java.util.*;
+
+import com.rohanclan.ashpool.core.AResultSet;
+import com.rohanclan.ashpool.core.CommandManager;
+import com.rohanclan.ashpool.core.TableManager;
 
 /**
  * Builds the order by section of the xpath
@@ -52,7 +56,7 @@ public class OrderFilter extends SQLFilter{
 		StringBuffer orderbyclause  = new StringBuffer();
 		//StringBuffer orderbyclauseU = new StringBuffer();
 		
-		java.util.Map cols = new java.util.HashMap();
+		Map<String,String> cols = new HashMap<String,String>();
 		//we will need to get the datatypes to sort correctly
 		//if(stok.hasMoreElements()){
 		try{

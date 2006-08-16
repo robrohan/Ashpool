@@ -58,7 +58,7 @@ public class Ashpool
 	
 	private String currentcmd="";
 	//all the system commands
-	public Map commands;
+	public Map<String, AshpoolCmd> commands;
 	//the script file that holds commands
 	private String scriptfile = null;
 	
@@ -84,7 +84,7 @@ public class Ashpool
 			connMan.getCommandManager().setVariable("STATS","true");
 			
 			//build the command list
-			commands = new java.util.HashMap();
+			commands = new java.util.HashMap<String, AshpoolCmd>();
 			buildCommandList();
 		}
 		catch(Exception e)

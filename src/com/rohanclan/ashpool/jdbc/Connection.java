@@ -35,6 +35,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Savepoint;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import com.rohanclan.ashpool.core.AResultSet;
@@ -89,48 +91,6 @@ public class Connection implements java.sql.Connection {
 					{
 						throw new SQLException("No 'password' passed to a managed datasource");
 					}
-					
-					//try
-					//{
-						//This is a hack. Can't figure out how others do this, but 
-						//this tries to load the Globals.class just to see if it's there
-						//if it's not it'll throw a catchable error - else try to load 
-						//the crypto libraries (not included in the open version)
-						//java.io.BufferedInputStream bis = new java.io.BufferedInputStream(
-						//	getClass().getResourceAsStream("/com/rohanclan/crypto/Globals.class")
-						//);
-						//int there = bis.read();
-						
-						//Class glbs = Class.forName("com.rohanclan.ashpool.core.TableManagerCrypto");
-						
-						//defaults to DES
-						//com.rohanclan.ashpool.core.TableManagerCrypto tmc =
-						//	(com.rohanclan.ashpool.core.TableManagerCrypto)glbs.newInstance();
-						
-						//tmc.setDataStore(datastore);
-						//tmc.fireUpCrypto();
-						
-						//String keyalg[] = password.split("_");
-						
-						//tmc.setAlgorithm(keyalg[0]);
-						//tmc.setAlgorithm("AES");
-						
-						//String key = com.rohanclan.crypto.Globals.asHex(password.getBytes());
-						//System.out.println("key: " + key);
-						
-						//tmc.setKey(keyalg[1]);
-						
-						//conMan.setTableManager(tmc);
-						
-					//}
-					//catch(java.io.IOException ioe)
-					//{
-						//hack to catch non loaded crypt files
-					//}
-					//catch(Exception e)
-					//{
-					//	throw new SQLException("Crypto Error: " + e.toString());
-					//}
 					
 					ar = conMan.executeStatement(
 						"select key from sys_users where uname='" + username
@@ -371,8 +331,9 @@ public class Connection implements java.sql.Connection {
 	 * @see #setTypeMap
 	 *
 	 */
-	public java.util.Map getTypeMap() throws SQLException {
-		return new java.util.HashMap();
+	@SuppressWarnings("unchecked")
+	public Map getTypeMap() throws SQLException {
+		return new HashMap();
 		//return null;
 	}
 	

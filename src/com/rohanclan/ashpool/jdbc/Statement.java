@@ -45,7 +45,7 @@ public class Statement implements java.sql.Statement {
 	
 	private ConnectionManager connMan;
 	//private Vector resultSets;
-	private ArrayList resultSets;
+	private ArrayList<ResultSet> resultSets;
 	//in this class current is 0 based (like in the result set),
 	//but here they bounds are 0 to size() -1 current result set
 	//should not move before the first resultset (-1)
@@ -56,7 +56,7 @@ public class Statement implements java.sql.Statement {
 	
 	public void setConnectionManager(ConnectionManager cm){
 		//resultSets = new Vector();
-		resultSets = new ArrayList();
+		resultSets = new ArrayList<ResultSet>();
 		this.connMan = cm;
 	}
 	

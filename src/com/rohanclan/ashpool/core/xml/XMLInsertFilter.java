@@ -25,7 +25,7 @@
  * Created on March 15, 2003, 9:40 AM
  */
 
-package com.rohanclan.ashpool.core;
+package com.rohanclan.ashpool.core.xml;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

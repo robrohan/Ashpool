@@ -30,7 +30,8 @@ package com.rohanclan.ashpool.core;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
-public class AshpoolException extends Exception{
+public class AshpoolException extends Exception {
+	static final long serialVersionUID = 0x234db3f;
 	
 	private Throwable detail;
 	

@@ -27,7 +27,7 @@
 
 // $Id: XMLWriter.java,v 1.5 2005/01/06 07:58:55 rohanr2 Exp $
 
-package com.rohanclan.ashpool.core;
+package com.rohanclan.ashpool.core.xml;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -41,6 +41,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.NamespaceSupport;
 import org.xml.sax.helpers.XMLFilterImpl;
+
 
 
 /**
@@ -271,9 +272,9 @@ public class XMLWriter extends XMLFilterImpl{
     ////////////////////////////////////////////////////////////////////
     // Internal state.
     ////////////////////////////////////////////////////////////////////
-    private Hashtable prefixTable;
-    private Hashtable forcedDeclTable;
-    private Hashtable doneDeclTable;
+    private Hashtable<String,String> prefixTable;
+    private Hashtable<String,Boolean> forcedDeclTable;
+    private Hashtable<String,String> doneDeclTable;
     private int elementLevel = 0;
     private Writer output;
     private NamespaceSupport nsSupport;
@@ -347,9 +348,9 @@ public class XMLWriter extends XMLFilterImpl{
     private void init(Writer writer){
 	setOutput(writer);
 	nsSupport = new NamespaceSupport();
-	prefixTable = new Hashtable();
-	forcedDeclTable = new Hashtable();
-	doneDeclTable = new Hashtable();
+	prefixTable = new Hashtable<String,String>();
+	forcedDeclTable = new Hashtable<String,Boolean>();
+	doneDeclTable = new Hashtable<String,String>();
     }
 
     ////////////////////////////////////////////////////////////////////

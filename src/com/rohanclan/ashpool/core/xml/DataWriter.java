@@ -24,7 +24,7 @@
  
 // DataWriter.java - XML writer for data-oriented files.
 
-package com.rohanclan.ashpool.core;
+package com.rohanclan.ashpool.core.xml;
 
 import java.io.Writer;
 import java.util.Stack;
@@ -32,6 +32,7 @@ import java.util.Stack;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+
 
 
 /**
@@ -200,7 +201,7 @@ public class DataWriter extends XMLWriter
     {
 	depth = 0;
 	state = SEEN_NOTHING;
-	stateStack = new Stack();
+	stateStack = new Stack<Object>();
 	super.reset();
     }
 
@@ -361,7 +362,7 @@ public class DataWriter extends XMLWriter
     ////////////////////////////////////////////////////////////////////
 
     private Object state = SEEN_NOTHING;
-    private Stack stateStack = new Stack();
+    private Stack<Object> stateStack = new Stack<Object>();
 
     private int indentStep = 0;
     private int depth = 0;

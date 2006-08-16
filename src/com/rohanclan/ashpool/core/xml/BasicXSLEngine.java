@@ -20,10 +20,12 @@
  * THE SOFTWARE.
  * 
  */ 
-package com.rohanclan.ashpool.core;
+package com.rohanclan.ashpool.core.xml;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
@@ -52,13 +54,14 @@ public class BasicXSLEngine {
 	public static String SAXDriver = "org.apache.crimson.parser.XMLReaderImpl";
 	
 	/** the params to pass to the style sheet */
-	public java.util.Vector params;
+	//public java.util.Vector params;
+	public List<String> params;
 	
 	/** Creates a new instance of BasicXSLEngine */
 	public BasicXSLEngine() 
 	{
 		doFactoryReset();
-		params = new java.util.Vector();
+		params = new ArrayList<String>();
 	}
 	
 	/** change the xslt factory (call doFactoryRest) */
@@ -82,11 +85,12 @@ public class BasicXSLEngine {
 	/** set fresh params */
 	public void clearParams()
 	{
-		params.removeAllElements();
+		//params.removeAllElements();
+		params.clear();
 	}
 	
 	/** set a bunch of params */
-	public void setParams(java.util.Vector inparams)
+	public void setParams(List<String> inparams)
 	{
 		params = inparams;
 	}
@@ -124,7 +128,7 @@ public class BasicXSLEngine {
 		int psize=params.size();
 		for(int i=0; i < psize-1; i++)
 			transformer.setParameter(
-				(String)params.elementAt(i), (String)params.elementAt(i+1)
+				params.get(i), params.get(i+1)
 			);
 			
 		//do the transformation

@@ -25,11 +25,18 @@
  * Created on February 7, 2003, 8:27 PM
  */
 
-package com.rohanclan.ashpool.core;
+package com.rohanclan.ashpool.core.filter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import com.rohanclan.ashpool.core.AResultSet;
+import com.rohanclan.ashpool.core.AshpoolException;
+import com.rohanclan.ashpool.core.AshpoolSQLFilter;
+import com.rohanclan.ashpool.core.CommandManager;
+import com.rohanclan.ashpool.core.TableManager;
+import com.rohanclan.ashpool.core.xml.BasicXSLEngine;
 
 /**
  * filter to create tables
@@ -38,14 +45,14 @@ import java.util.StringTokenizer;
 public class CreateFilter extends SQLFilter implements AshpoolSQLFilter {
 	private static final String XSDNS = "xs:";
 	
-	protected static List int_type;
-	protected static List float_type;
-	protected static List string_type;
-	protected static List boolean_type;
-	protected static List date_type;
-	protected static List double_type;
-	protected static List decimal_type;
-	protected static List datetime_type;
+	protected static List<String> int_type;
+	protected static List<String> float_type;
+	protected static List<String> string_type;
+	protected static List<String> boolean_type;
+	protected static List<String> date_type;
+	protected static List<String> double_type;
+	protected static List<String> decimal_type;
+	protected static List<String> datetime_type;
 	
 	//private AResultSet rs;
 	
@@ -58,14 +65,14 @@ public class CreateFilter extends SQLFilter implements AshpoolSQLFilter {
 	
 	private void buildTypeLists(){
 		if(int_type == null){
-			int_type = new ArrayList();
-			float_type = new ArrayList();
-			string_type = new ArrayList();
-			boolean_type = new ArrayList();
-			date_type = new ArrayList();
-			double_type = new ArrayList();
-			decimal_type = new ArrayList();
-			datetime_type = new ArrayList();
+			int_type = new ArrayList<String>();
+			float_type = new ArrayList<String>();
+			string_type = new ArrayList<String>();
+			boolean_type = new ArrayList<String>();
+			date_type = new ArrayList<String>();
+			double_type = new ArrayList<String>();
+			decimal_type = new ArrayList<String>();
+			datetime_type = new ArrayList<String>();
 			
 			//int mapping
 			int_type.add("integer");
@@ -303,12 +310,12 @@ public class CreateFilter extends SQLFilter implements AshpoolSQLFilter {
 	/** returns the currently supported data types */
 	public void getSupportedDataTypes(AResultSet rs){
 		
-		java.util.Vector vNull = new java.util.Vector();
-		java.util.Vector vName = new java.util.Vector();
-		java.util.Vector vType = new java.util.Vector();
-		java.util.Vector vPres = new java.util.Vector();
-		java.util.Vector vSearch = new java.util.Vector();
-		java.util.Vector vAuto = new java.util.Vector();
+		List<Object> vNull = new ArrayList<Object>();
+		List<Object> vName = new ArrayList<Object>();
+		List<Object> vType = new ArrayList<Object>();
+		List<Object> vPres = new ArrayList<Object>();
+		List<Object> vSearch = new ArrayList<Object>();
+		List<Object> vAuto = new ArrayList<Object>();
 		
 		//////////////////////////////////////////
 		vNull.add("");

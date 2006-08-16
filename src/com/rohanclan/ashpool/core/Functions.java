@@ -27,8 +27,12 @@
 
 package com.rohanclan.ashpool.core;
 
-import java.util.*;
-import java.util.regex.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -36,11 +40,11 @@ import java.util.regex.*;
  */
 public class Functions 
 {	
-	public static List stdfunctions    = new ArrayList();
-	public static List datefunctions   = new ArrayList();
-	public static List mathfunctions   = new ArrayList();
-	public static List aggfunctions    = new ArrayList();
-	public static List miscfunctions   = new ArrayList();
+	public static List<String> stdfunctions    = new ArrayList<String>();
+	public static List<String> datefunctions   = new ArrayList<String>();
+	public static List<String> mathfunctions   = new ArrayList<String>();
+	public static List<String> aggfunctions    = new ArrayList<String>();
+	public static List<String> miscfunctions   = new ArrayList<String>();
 		
 	private Functions(){;}
 
@@ -179,7 +183,7 @@ public class Functions
 	private static Pattern p = Pattern.compile(
 		"(['][a-zA-Z0-9\\&;,\"!@#$%_`~\\-\\?\\.\\*\\+ \\t\\r\\n\\(\\)]*['])"
 	);
-	public static String placeHoldStrings(String sql, Map keeper){
+	public static String placeHoldStrings(String sql, Map<String,String> keeper){
 		StringBuffer sb = new StringBuffer();
 		Matcher m = p.matcher(sql);
 		

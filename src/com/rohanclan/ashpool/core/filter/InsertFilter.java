@@ -25,7 +25,7 @@
  * Created on February 1, 2003, 10:16 AM
  */
 
-package com.rohanclan.ashpool.core;
+package com.rohanclan.ashpool.core.filter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,21 +37,31 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import com.rohanclan.ashpool.core.AResultSet;
+import com.rohanclan.ashpool.core.AshpoolSQLFilter;
+import com.rohanclan.ashpool.core.CommandManager;
+import com.rohanclan.ashpool.core.Functions;
+import com.rohanclan.ashpool.core.TableManager;
+import com.rohanclan.ashpool.core.Validator;
+import com.rohanclan.ashpool.core.xml.BasicXSLEngine;
+import com.rohanclan.ashpool.core.xml.XMLInsertFilter;
+import com.rohanclan.ashpool.core.xml.XMLWriter;
+
 /**
  * filter to add a row to a table
  * @author  rob
  */
 public class InsertFilter extends SQLFilter implements AshpoolSQLFilter {
-	private List insertColumnNames;
-	private List insertColumnValues;
+	private List<String> insertColumnNames;
+	private List<String> insertColumnValues;
 	
 	//private Validator val;
 	
 	/** Creates a new instance of InsertFilter */
 	public InsertFilter(TableManager tman, CommandManager com) {
 		super(tman, com);
-		insertColumnNames = new ArrayList();
-		insertColumnValues = new ArrayList();
+		insertColumnNames = new ArrayList<String>();
+		insertColumnValues = new ArrayList<String>();
 		//used to validate fields
 		//val = new Validator();
 	}
@@ -67,7 +77,7 @@ public class InsertFilter extends SQLFilter implements AshpoolSQLFilter {
 		
 		//System.out.println(sql);
 		////////////////////////////////////////////////////////////////////
-		Map savedStrings = new HashMap();
+		Map<String,String> savedStrings = new HashMap<String,String>();
 		sql = Functions.placeHoldStrings(sql,savedStrings);
 		//the parser expects spaces between some elements, now that
 		//strings are removed, adjust the query string

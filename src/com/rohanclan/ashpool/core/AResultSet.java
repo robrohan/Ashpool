@@ -51,21 +51,27 @@ public class AResultSet implements java.sql.ResultSet {
 		we have to off set current row by -1 
 	*/
 	private int currentrow = -1;
-	private List resultTable;
+	private List<ResultColumn> resultTable;
 	//private AResultSetMetaData rsmetadata;
 	
 	/** Creates a new instance of ResultSet */
 	public AResultSet() {
-		resultTable = new ArrayList();
+		resultTable = new ArrayList<ResultColumn>();
 	}
 	
 	/** add a column (with a name and type) to the result set
 	 */
-	public void addColumn(String name, List data, int type){
+	public void addColumn(String name, List<Object> data, int type){
 		resultTable.add(new ResultColumn());
-		((ResultColumn)resultTable.get(resultTable.size() - 1)).columnName = name;
+		/* ((ResultColumn)resultTable.get(resultTable.size() - 1)).columnName = name;
 		((ResultColumn)resultTable.get(resultTable.size() - 1)).type = type;
 		((ResultColumn)resultTable.get(resultTable.size() - 1)).columnData = data;
+		*/
+		
+		ResultColumn rc = resultTable.get(resultTable.size() -1);
+		rc.columnName = name;
+		rc.type = type;
+		rc.columnData = data;
 	}
 	
 	/** resets this result set object so it can be reused */
@@ -103,7 +109,8 @@ public class AResultSet implements java.sql.ResultSet {
 	
 	/** add a field to the end of a column */
 	public void addField(int column, String data){
-		((ResultColumn)resultTable.get(column)).columnData.add(data);
+		//((ResultColumn)resultTable.get(column)).columnData.add(data);
+		resultTable.get(column).columnData.add(data);
 	}
 	
 	/** make a quick result set. Used mostly to pass messages that need
@@ -112,7 +119,7 @@ public class AResultSet implements java.sql.ResultSet {
 	 * this one call.
 	 */
 	public void setQuickResultSet(String colname, String data){
-		List tempV = new ArrayList();
+		List<Object> tempV = new ArrayList<Object>();
 		tempV.add(data);
 		addColumn(colname, tempV, java.sql.Types.VARCHAR);
 	}

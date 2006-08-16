@@ -20,35 +20,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
  * THE SOFTWARE.
  * 
- * SQLFilter.java
+ * TableFilter.java
  *
- * Created on April 3, 2003, 10:58 PM
+ * Created on 2003-05-04
  */
 
-package com.rohanclan.ashpool.core;
+package com.rohanclan.ashpool.core.filter;
+
+import com.rohanclan.ashpool.core.CommandManager;
+import com.rohanclan.ashpool.core.TableManager;
+
 
 /**
- * super class for all sql filters
+ * Builds the table section of the xpath. Pretty boring class. It is added
+ * for future use
  * @author  rob
  */
-public class SQLFilter 
-{	
-	protected TableManager tableman;
-	protected String mainfile;
-	protected CommandManager comman;
-	protected BasicXSLEngine bXSL;
+public class TableFilter extends SQLFilter{
+
+	private String tablename;
 	
-	/** Creates a new instance of SQLFilter */
-	public SQLFilter(){;}
+	public TableFilter(TableManager tman, CommandManager com) throws Exception{
+		super(tman,com);
+		//sf = new SelectFilter(tman, com);
+	}
 	
-	public SQLFilter(TableManager tman, CommandManager com) 
-	{
-		tableman = tman;
-		comman = com;
-		if(bXSL == null)
-		{
-			bXSL = com.getXSLEngine();
-		}
+	public String getTableName(){
+		return tablename;
+	}
+	
+	public String createXPath(String sql) throws Exception{
+		tablename = sql.trim();
+		return tablename;
 	}
 
 }

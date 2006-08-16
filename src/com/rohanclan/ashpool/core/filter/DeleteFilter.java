@@ -25,11 +25,18 @@
  * Created on March 16, 2003, 8:10 PM
  */
 
-package com.rohanclan.ashpool.core; 
+package com.rohanclan.ashpool.core.filter; 
 
 import java.util.HashMap;
 import java.util.Map;
 //import java.util.StringTokenizer;
+
+import com.rohanclan.ashpool.core.AResultSet;
+import com.rohanclan.ashpool.core.AshpoolSQLFilter;
+import com.rohanclan.ashpool.core.CommandManager;
+import com.rohanclan.ashpool.core.Functions;
+import com.rohanclan.ashpool.core.TableManager;
+import com.rohanclan.ashpool.core.xml.BasicXSLEngine;
 
 //import org.xml.sax.helpers.XMLReaderFactory;
 
@@ -137,7 +144,7 @@ public class DeleteFilter extends SQLFilter implements AshpoolSQLFilter {
 		
 		// 1)
 		//save any user defined strings so they dont jack up our splits
-		Map savedStrings = new HashMap();
+		Map<String,String> savedStrings = new HashMap<String,String>();
 		sql = Functions.placeHoldStrings(sql,savedStrings);
 		
 		////////////////////////////////////////////////////////////////////

@@ -25,13 +25,22 @@
  * Created on February 1, 2003, 10:16 AM
  */ 
 
-package com.rohanclan.ashpool.core;
+package com.rohanclan.ashpool.core.filter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 //import java.util.StringTokenizer;
+
+import com.rohanclan.ashpool.core.AResultSet;
+import com.rohanclan.ashpool.core.AshpoolException;
+import com.rohanclan.ashpool.core.AshpoolSQLFilter;
+import com.rohanclan.ashpool.core.CommandManager;
+import com.rohanclan.ashpool.core.Functions;
+import com.rohanclan.ashpool.core.TableManager;
+import com.rohanclan.ashpool.core.Validator;
+import com.rohanclan.ashpool.core.xml.BasicXSLEngine;
 
 /**
  * filter to update fields in a table
@@ -136,8 +145,8 @@ public class UpdateFilter extends SQLFilter implements AshpoolSQLFilter {
 		StringBuffer whereclause = new StringBuffer();
 		//String currenttok = "";
 		
-		List insertColumnNames = new ArrayList();
-		List insertColumnValues = new ArrayList();
+		List<String> insertColumnNames = new ArrayList<String>();
+		List<String> insertColumnValues = new ArrayList<String>();
 		
 		//this is kind of kludgy. If wherefilter is null then this is prolly
 		//the first call, so make all our needed filters. (hopefully this
@@ -156,7 +165,7 @@ public class UpdateFilter extends SQLFilter implements AshpoolSQLFilter {
 		
 		// 1)
 		//save any user defined strings so they dont jack up our splits
-		Map savedStrings = new HashMap();
+		Map<String,String> savedStrings = new HashMap<String,String>();
 		sql = Functions.placeHoldStrings(sql,savedStrings);
 		
 		////////////////////////////////////////////////////////////////////

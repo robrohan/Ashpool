@@ -25,11 +25,15 @@
  * Created on February 2, 2003, 8:45 AM
  */
 
-package com.rohanclan.ashpool.core;
+package com.rohanclan.ashpool.core.xml;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+
+import com.rohanclan.ashpool.core.AResultSet;
+import com.rohanclan.ashpool.core.AResultSetMetaData;
+import com.rohanclan.ashpool.core.ResultColumn;
 
 /**
  * Takes an XML Document in the format

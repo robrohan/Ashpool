@@ -25,9 +25,14 @@
  * Created on 2003-05-04
  */
 
-package com.rohanclan.ashpool.core;
+package com.rohanclan.ashpool.core.filter;
 
 import java.util.StringTokenizer;
+
+import com.rohanclan.ashpool.core.AshpoolException;
+import com.rohanclan.ashpool.core.CommandManager;
+import com.rohanclan.ashpool.core.Functions;
+import com.rohanclan.ashpool.core.TableManager;
 
 /**
  * Builds the table section of the xpath. Pretty boring class. It is added
