@@ -168,21 +168,11 @@ public class Functions
 		}
 		return funlist.toString().substring(0,funlist.length() -1);
 	}
-
-	
-	/** some keywords, even if in a '' section, will blow up the
-		query (will cause it to split incorrectly). This function
-		replaces bad words with place holders */
-	/* public static String placeHoldKeyWords(String sql){
-		// '([[:alnum:][:blank:][\!?/@#$%^&*()\-+=\";:\>\<\\|\]\[{}~`]*)'
-		return "";	
-	} */
 	
 	/** replaces quoted text with an #[number]# and stores the number with
 		the string in the passed Map object */
-	private static Pattern p = Pattern.compile(
-		"(['][a-zA-Z0-9\\&;,\"!@#$%_`~\\-\\?\\.\\*\\+ \\t\\r\\n\\(\\)]*['])"
-	);
+	private static Pattern p = Pattern.compile("(['][a-zA-Z0-9\\&;,\"!@#$%_`~\\-\\?\\.\\*\\+ \\t\\r\\n\\(\\)]*['])");
+	
 	public static String placeHoldStrings(String sql, Map<String,String> keeper){
 		StringBuffer sb = new StringBuffer();
 		Matcher m = p.matcher(sql);
@@ -196,9 +186,6 @@ public class Functions
 		}
 		m.appendTail(sb);
 		
-		//System.out.println(sb.toString());
-		//System.out.println(keeper);
-		
 		return sb.toString();
 	}
 	
@@ -206,6 +193,7 @@ public class Functions
 		into the query fragments - this undoes the placeHolderString
 		Function */
 	private static Pattern unp = Pattern.compile("#[0-9]+#");
+	
 	public static String unplaceHoldStrings(String sqlfrag, Map lookup){
 		if(sqlfrag.indexOf('#') < 0){
 			return sqlfrag;
@@ -243,19 +231,10 @@ public class Functions
 	}
 	
 	public static String escapeSubQueries(String sql){
-		sql = sql.replaceAll(
-			"(\\([ ]*)[Ss][Ee][Ll][Ee][Cc][Tt]","$1 %ASHPOOLSELECT%"
-		);
-		sql = sql.replaceAll(
-			"(\\([ a-zA-Z0-9_\\$\\%]*)[Ff][Rr][Oo][Mm]([ \\\"\\'a-zA-Z0-9_\\%\\$\\=]*\\))","$1 %ASHPOOLFROM% $2"
-		);
-		sql = sql.replaceAll(
-			"[Ww][Hh][Ee][Rr][Ee]([a-zA-Z0-9_\\%\\=\\\"\\' ]*\\))","%ASHPOOLWHERE% $1"
-		);
-		
-		sql = sql.replaceAll(
-			"([IiOo][NnUu][NnTt][Ee][Rr] [Jj][Oo][Ii][Nn])", "%ASHPOOLJOIN% $1"
-		);
+		sql = sql.replaceAll("(\\([ ]*)[Ss][Ee][Ll][Ee][Cc][Tt]","$1 %ASHPOOLSELECT%");
+		sql = sql.replaceAll("(\\([ a-zA-Z0-9_\\$\\%]*)[Ff][Rr][Oo][Mm]([ \\\"\\'a-zA-Z0-9_\\%\\$\\=]*\\))","$1 %ASHPOOLFROM% $2");
+		sql = sql.replaceAll("[Ww][Hh][Ee][Rr][Ee]([a-zA-Z0-9_\\%\\=\\\"\\' ]*\\))","%ASHPOOLWHERE% $1");
+		sql = sql.replaceAll("([IiOo][NnUu][NnTt][Ee][Rr] [Jj][Oo][Ii][Nn])", "%ASHPOOLJOIN% $1");
 		return sql;
 	}
 	
@@ -290,5 +269,4 @@ public class Functions
 		}
 		return opr;
 	}
-
 }

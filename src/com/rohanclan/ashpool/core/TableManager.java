@@ -27,8 +27,15 @@
 
 package com.rohanclan.ashpool.core;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +67,7 @@ public class TableManager {
 	/** reference a stored procedure */
 	public static final byte TYPE_PROC   	= 4;
 	
-	protected java.io.File datastore;
+	protected File datastore;
 	protected boolean readonly = false;
 	
 	public TableManager(){;}
@@ -128,18 +135,15 @@ public class TableManager {
 	public int getNextSequence(String tablename) throws Exception {
 		int autonum=0;
 		synchronized("GET_NEXT_SEQ_" + tablename){
-			java.io.DataInputStream dis = new java.io.DataInputStream(
+			DataInputStream dis = new DataInputStream(
 				getTableInputStream(tablename, TYPE_COUNTER)
-				/* new java.io.FileInputStream(
-					this.getTableFile(tablename, TYPE_COUNTER)
-				) */
 			);
 			
 			autonum = dis.readInt();
 			dis.close();
 			autonum++;
 			
-			java.io.DataOutputStream dos = new java.io.DataOutputStream(
+			DataOutputStream dos = new DataOutputStream(
 				getTableOutputStream(tablename, TYPE_COUNTER)
 			);
 			
@@ -153,7 +157,7 @@ public class TableManager {
 	/** changes the base sequence number for a autonumbered table */
 	public void setSequenceStart(String tablename, int base) throws Exception{
 		synchronized("GET_NEXT_SEQ_" + tablename){
-			java.io.DataOutputStream dos = new java.io.DataOutputStream(
+			DataOutputStream dos = new DataOutputStream(
 				getTableOutputStream(tablename, TYPE_COUNTER)
 			);
 			
@@ -165,14 +169,14 @@ public class TableManager {
 	}
 	
 	/** create a table from a stream */
-	public void createTable(String tablename, java.io.InputStream is, byte type) throws Exception{
+	public void createTable(String tablename, InputStream is, byte type) throws Exception{
 		
-		java.io.OutputStream fops = getTableOutputStream(tablename,type);
+		OutputStream fops = getTableOutputStream(tablename,type);
 		
 		///////////////////////////////////////////
 		//get the proper extention
 		String tabletype = extFromByte(type);
-		java.io.File tFile = new java.io.File(
+		File tFile = new File(
 				getDatastoreURI() + System.getProperty("file.separator")
 				+ tablename + tabletype
 		);
@@ -222,11 +226,11 @@ public class TableManager {
 	
 	/** create a new table from a string */
 	public void createTable(String tablename, String Data, byte type) throws Exception {
-		createTable(tablename, new java.io.ByteArrayInputStream(Data.getBytes()), type);
+		createTable(tablename, new ByteArrayInputStream(Data.getBytes()), type);
 	}
 	
 	/** get the datastore (the directory) as a file object */
-	public java.io.File getDatastore(){
+	public File getDatastore(){
 		return this.datastore;
 	}
 	
@@ -238,8 +242,8 @@ public class TableManager {
 	/** the base method for getting an output stream to a file in the datastore
 	 * can be any type (TABLE, PROCDEURE, etc)
 	 */
-	public java.io.OutputStream getTableOutputStream(String tablename, byte type) throws IOException, Exception{
-		java.io.FileOutputStream fos = new java.io.FileOutputStream(
+	public OutputStream getTableOutputStream(String tablename, byte type) throws IOException, Exception{
+		FileOutputStream fos = new FileOutputStream(
 			getTableFullPath(tablename, type)
 		);
 		
@@ -247,17 +251,17 @@ public class TableManager {
 	}
 	
 	/** get a table as an input stream */
-	public java.io.InputStream getTableInputStream(String tablename) throws Exception {
+	public InputStream getTableInputStream(String tablename) throws Exception {
 		return getTableInputStream(tablename, TableManager.TYPE_TABLE);
 	}
 	
 	/** get a schema as an input stream */
-	public java.io.InputStream getSchemaInputStream(String tablename) throws Exception {
+	public InputStream getSchemaInputStream(String tablename) throws Exception {
 		return getTableInputStream(tablename, TableManager.TYPE_SCHEMA);
 	}
 	
 	/** get a stored procedure as an input stream */
-	public java.io.InputStream getProcedureInputStream(String procname) throws Exception {
+	public InputStream getProcedureInputStream(String procname) throws Exception {
 		return getTableInputStream(procname, TYPE_PROC);
 		//return new java.io.FileInputStream(getTableFullPath(procname, TYPE_PROC));
 	}
@@ -268,8 +272,8 @@ public class TableManager {
 	 * can be any type (TABLE, PROCDEURE, etc)
 	 * get a table (xml file) as an input stream 
 	 */
-	public java.io.InputStream getTableInputStream(String tablename, byte type) throws IOException, Exception {
-		java.io.FileInputStream fis = new java.io.FileInputStream(
+	public InputStream getTableInputStream(String tablename, byte type) throws IOException, Exception {
+		FileInputStream fis = new FileInputStream(
 			getTableFullPath(tablename, type)
 		);
 		
@@ -277,7 +281,7 @@ public class TableManager {
 	}
 	
 	/** get a table (xml file) as a file object */
-	public java.io.File getTableFile(String tablename, byte type){  
+	public File getTableFile(String tablename, byte type){  
 		return new File(getTableFullPath(tablename, type));
 	}
 

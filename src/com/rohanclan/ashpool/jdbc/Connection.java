@@ -93,8 +93,7 @@ public class Connection implements java.sql.Connection {
 					}
 					
 					ar = conMan.executeStatement(
-						"select key from sys_users where uname='" + username
-						+ "' and password = '" + password + "'"
+						"select key from sys_users where uname='" + username + "' and password = '" + password + "'"
 					);
 					
 					if( ((AResultSetMetaData)ar.getMetaData()).getRecordCount() == 0)

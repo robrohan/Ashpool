@@ -27,7 +27,10 @@
 
 package com.rohanclan.ashpool.core;
 
+import java.sql.Types;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Uses schema information to validate field infomation (mostly used on inserts)
@@ -64,8 +67,8 @@ public class Validator {
 	 * totally wrong throws a error 
 	 */
 	public static String validate(String field, short datatype, int len) throws AshpoolException {
-		java.text.SimpleDateFormat isoformatter;
-		java.text.SimpleDateFormat stdformatter;
+		SimpleDateFormat isoformatter;
+		SimpleDateFormat stdformatter;
 		
 		if(field.toString().toLowerCase().equals("null") 
 			|| field.toString().equals("''")
@@ -76,8 +79,8 @@ public class Validator {
 		}
 		
 		switch(datatype){
-			case java.sql.Types.CHAR:
-			case java.sql.Types.VARCHAR:
+			case Types.CHAR:
+			case Types.VARCHAR:
 				//should be in quotes for a varchar
 				if(!field.trim().startsWith("'") || !field.trim().endsWith("'")){
 					//throw new SQLException("Syntax error with varchar(string) value: " + field);
@@ -101,7 +104,7 @@ public class Validator {
 				//guess thats it, return string for insertion
 				return field;
 				
-			case java.sql.Types.BOOLEAN:
+			case Types.BOOLEAN:
 				//be nice and try to guess what they want
 				if(field.toLowerCase().endsWith("true") || field.equals("1") 
 					|| field.toLowerCase().equals("yes")){
@@ -113,13 +116,13 @@ public class Validator {
 					//throw new SQLException("Can not make " + field + " into a boolean");
 				}
 							   
-			case java.sql.Types.DATE:
-				isoformatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
-				stdformatter = new java.text.SimpleDateFormat("MM/dd/yyyy");
+			case Types.DATE:
+				isoformatter = new SimpleDateFormat("yyyy-MM-dd");
+				stdformatter = new SimpleDateFormat("MM/dd/yyyy");
 				
 				//if they used the now function send back the proper date
 				if(field.toLowerCase().equals("now") || field.toLowerCase().equals("date")){
-					return isoformatter.format(new java.util.Date());
+					return isoformatter.format(new Date());
 				}
 				
 				//try to parse the string for a date first try iso
@@ -133,19 +136,19 @@ public class Validator {
 						//throw new SQLException(
 						throw new AshpoolException(
 							"Can not parse date. Try using iso format yyyy-mm-dd or " 
-							+ stdformatter.format(new java.util.Date()) 
+							+ stdformatter.format(new Date()) 
 							+ " Error with: " + field
 						);
 					}
 				}
 			
-			case java.sql.Types.TIMESTAMP:
-				isoformatter = new java.text.SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+			case Types.TIMESTAMP:
+				isoformatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
 				//locale specific
-				stdformatter = new java.text.SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+				stdformatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
 				//dbtime stamp {ts '2003-03-31 00:00:00'}
-				java.text.SimpleDateFormat tsformatter =
-					new java.text.SimpleDateFormat("'{ts 'yyyy-MM-dd hh:mm:ss'}'");
+				SimpleDateFormat tsformatter =
+					new SimpleDateFormat("'{ts 'yyyy-MM-dd hh:mm:ss'}'");
 				
 				if(field.startsWith("'") && field.endsWith("'")){
 					field = field.substring(1,field.length()-1);
@@ -176,7 +179,7 @@ public class Validator {
 					}
 				}
 				
-			case java.sql.Types.INTEGER:
+			case Types.INTEGER:
 				try{
 					Integer.parseInt(field);
 				}catch(Exception e){
@@ -189,8 +192,8 @@ public class Validator {
 				}
 				return field;
 			
-			case java.sql.Types.FLOAT:
-			case java.sql.Types.DECIMAL:
+			case Types.FLOAT:
+			case Types.DECIMAL:
 				try{
 					Float.parseFloat(field);
 				}catch(Exception e){
@@ -202,7 +205,7 @@ public class Validator {
 				}
 				return field;
 				
-			case java.sql.Types.DOUBLE:
+			case Types.DOUBLE:
 				try{
 					Double.parseDouble(field);
 				}catch(Exception e){
