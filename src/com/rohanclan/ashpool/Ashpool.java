@@ -538,7 +538,7 @@ public class Ashpool {
 		
 		System.out.println("+===============================+");
 		System.out.println("|     Ashpool XML Database      |");
-		System.out.println("|    (c)2003-2006 Rob Rohan     |");
+		System.out.println("|   (c) 2003-2006 Rob Rohan     |");
 		System.out.println("+===============================+");
 		
 		Ashpool boot = new Ashpool(args[0]);

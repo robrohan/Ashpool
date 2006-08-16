@@ -32,8 +32,8 @@ package com.rohanclan.ashpool.cmds;
  * @author  rob
  */
 public class About implements AshpoolCmd {
-	public static final String VERSION = "0.3.5";
-	public static final String YEAR="2003";
+	public static final String VERSION = "0.3.6";
+	public static final String YEAR="2003-2006";
 	
 	/** Creates a new instance of About */
 	public About() {;}
@@ -47,7 +47,7 @@ public class About implements AshpoolCmd {
 	System.out.println("          / (                                     _ : <");
 	System.out.println("        [ [      << Ashpool version "+VERSION+" >>         } >");
 	System.out.println("      | $               <xml_database/>              1 2 >");
-	System.out.println("      3          (c)"+YEAR+" Rohan Clan (Rob Rohan)         4 5");
+	System.out.println("      3      (c)"+YEAR+" Rohan Clan (Rob Rohan)         4 5");
 	System.out.println("    6 7                                                   8 7");
 	System.out.println("  9 0                       @ < a * >                     9 #");
 	System.out.println("  b c                 d e 5 ^ , + f 2 g >   >               h 7");
