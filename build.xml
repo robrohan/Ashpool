@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Ashpool" default="jar_no_scripting" basedir=".">
+<project name="Ashpool" default="jar" basedir=".">
 	
 	<property name="debug" value="false"/>
 	<property name="optimize" value="true"/>
@@ -8,8 +8,8 @@
 	<!-- compile all the needed files -->
 	<target name="build">
 		<javac 
-			target="1.4" 
-			source="1.4"
+			target="1.5" 
+			source="1.5"
 			srcdir="src"
 			destdir="bin"
 			debug="${debug}"
@@ -22,7 +22,7 @@
 	<!-- create an Ashpool jar without the bsf.jar and js.jar
 		built into the jar (smaller file but no scripting unless
 		you add the two to the classpath -->
-	<target name="jar_no_scripting" depends="build">
+	<target name="jar" depends="build">
 		<!-- includes="**/*.class" -->
 		<jar destfile="Ashpool.jar" 
 			basedir="bin"
