@@ -22,6 +22,11 @@
 
 package com.rohanclan.ashpool.cmds;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URL;
+
 import com.rohanclan.ashpool.core.TableManager;
 /**
  *
@@ -29,11 +34,11 @@ import com.rohanclan.ashpool.core.TableManager;
  */
 public class Import implements AshpoolCmd {
 	
-	private java.net.URL fromResource; //the file to import
+	private URL fromResource; //the file to import
 	//private byte type; //the type of new resource
-	private java.io.OutputStream fos; //the new table/procedure/etc
+	private OutputStream fos; //the new table/procedure/etc
 	
-	public Import(String urlfrom, String to, byte type, TableManager tman) throws Exception{
+	public Import(String urlfrom, String to, byte type, TableManager tman) throws Exception {
 		setFrom(urlfrom);
 		setTo(to, type, tman);
 	}
@@ -48,19 +53,16 @@ public class Import implements AshpoolCmd {
 	
 	public void doAction() throws Exception{
 		
-		java.io.BufferedReader ibr = new java.io.BufferedReader(
-			new java.io.InputStreamReader(fromResource.openStream())
-		);
+		BufferedReader ibr = new BufferedReader(new InputStreamReader(fromResource.openStream()));
 		
 		int i;
 		
-		while( (i=ibr.read()) != -1){
+		while( (i=ibr.read()) != -1) {
 			fos.write(i);
 		}
 		
 		fos.flush();
 		fos.close();
 		ibr.close();
-		
 	}
 }

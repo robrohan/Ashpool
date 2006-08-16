@@ -27,8 +27,11 @@
 
 package com.rohanclan.ashpool.core.filter;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 //import java.util.StringTokenizer;
@@ -44,6 +47,7 @@ import com.rohanclan.ashpool.core.Functions;
 import com.rohanclan.ashpool.core.TableManager;
 import com.rohanclan.ashpool.core.xml.BasicXSLEngine;
 import com.rohanclan.ashpool.core.xml.XMLtoResultSetFilter;
+import com.rohanclan.ashpool.libxslt.CompiledSheets;
 
 /**
  * Tries to take an SQL statement, turn it into a style sheet and apply it to
@@ -59,11 +63,11 @@ public class SelectFilter extends SQLFilter implements AshpoolSQLFilter {
 	
 	private boolean doDistinct = false;
 	
-	private WhereFilter wf;
-	private ColumnFilter cf;
-	private OrderFilter of;
-	private TableFilter tf;
-	private JoinFilter jf;
+	private WhereFilter where_filter;
+	private ColumnFilter column_filter;
+	private OrderFilter order_filter;
+	private TableFilter table_filter;
+	private JoinFilter join_filter;
 	
 	//any join commands
 	private String join[];
@@ -155,45 +159,32 @@ public class SelectFilter extends SQLFilter implements AshpoolSQLFilter {
 		bXSL.clearParams();
 		
 		//get a result stream
-		java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
-		java.io.InputStream is;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		InputStream is;
 		
 		bXSL.setParam("tablename", tablename + TableManager.TABLEEXT);
 		
-		if(tableman.hasSchema(tablename)){
-			
+		if(tableman.hasSchema(tablename)) {
 			bXSL.setParam("schemaname", tablename + TableManager.TABLESCHEMA);
 			//apply the stylesheet to the schema
 			
 			//get the stylesheet for a table with a schema
-			is = new java.io.ByteArrayInputStream(
-				com.rohanclan.ashpool.libxslt.CompiledSheets.sheetGetColumnNamesSchema.getBytes() 
-			);
+			is = new ByteArrayInputStream(CompiledSheets.sheetGetColumnNamesSchema.getBytes());
 			
-			//bXSL.transform(tableman.getSchemaInputStream(tablename),is,baos);
-			bXSL.transform(
-				tableman.getSchemaInputStream(tablename),
-				is,
-				baos
-			);
-		}else{
+			bXSL.transform(tableman.getSchemaInputStream(tablename), is, baos);
+		} else {
 			//get the stylesheet for a table without a schema
-			is = new java.io.ByteArrayInputStream(
-				com.rohanclan.ashpool.libxslt.CompiledSheets.sheetGetColumnNames.getBytes() 
-			);
+			is = new ByteArrayInputStream(CompiledSheets.sheetGetColumnNames.getBytes());
 			
 			//apply the stylesheet to the table
-			bXSL.transform(tableman.getTableInputStream(tablename),is,baos);
+			bXSL.transform(tableman.getTableInputStream(tablename), is, baos);
 		}
-		
 		
 		//create a new resultset filter
 		xmlfilter = new XMLtoResultSetFilter(reader, ars);
 		
 		//make an out an in
-		InputSource inputSource = new InputSource(
-			new ByteArrayInputStream(baos.toByteArray())
-		);
+		InputSource inputSource = new InputSource( new ByteArrayInputStream(baos.toByteArray()) );
 	
 		//fill in the resultset with the trasfrom results
 		xmlfilter.parse(inputSource);
@@ -208,30 +199,23 @@ public class SelectFilter extends SQLFilter implements AshpoolSQLFilter {
 	 * select
 	 */
 	public String executeQuery(String sql, byte type) throws Exception {
-		
-		java.io.OutputStream os = null;
+		OutputStream os = null;
 		String rsFile = null;
 		String dFile  = null;
 		
 		try{
 			//if this is going to give a resultset type of xml doc, send it to
 			//a temp file
-			if(type == SelectFilter.FORRESULTSET){
+			if(type == SelectFilter.FORRESULTSET) {
 				rsFile = "!stmp" + System.currentTimeMillis();
 				
 				tableman.createTable(rsFile,"", TableManager.TYPE_TABLE);
-				
 				os = tableman.getTableOutputStream(rsFile, TableManager.TYPE_TABLE);
-				
-				/* os = new java.io.FileOutputStream(
-					tableman.getTableFile(rsFile, TableManager.TYPE_TABLE)
-				); */
 				
 			//otherwise get a byte stream ready
 			}else if(type == SelectFilter.FORSINGLE){
-				os = new java.io.ByteArrayOutputStream();
+				os = new ByteArrayOutputStream();
 			}
-			
 			////////////////////////////////////////////////////////////////
 			
 			String sheet = createXPath(sql, type);
@@ -266,14 +250,11 @@ public class SelectFilter extends SQLFilter implements AshpoolSQLFilter {
 				
 				tableman.createTable(dFile,"", TableManager.TYPE_TABLE);
 				
-				//java.io.InputStream fis = tableman.getTableInputStream(rsFile);
-				java.io.BufferedInputStream fis = new java.io.BufferedInputStream(
+				BufferedInputStream fis = new BufferedInputStream(
 					tableman.getTableInputStream(rsFile)
 				);
 				
-				java.io.InputStream is = new java.io.ByteArrayInputStream(
-					com.rohanclan.ashpool.libxslt.CompiledSheets.sheetDoDistinct.getBytes() 
-				);
+				InputStream is = new ByteArrayInputStream(CompiledSheets.sheetDoDistinct.getBytes());
 				
 				java.io.OutputStream dos = tableman.getTableOutputStream(dFile, TableManager.TYPE_TABLE);
 				
@@ -323,13 +304,14 @@ public class SelectFilter extends SQLFilter implements AshpoolSQLFilter {
 		return null;
 	}
 	
-	/** fills the passed AResultSet with with the results of an sql->xslt query 
+	/** 
+	 * fills the passed AResultSet with with the results of an sql->xslt query 
 	 */
 	public void executeQuery(String sql, AResultSet ars) throws Exception{
 		//get the results of the sql into an input source
 		String dFile = "";
 		
-		//teptablename now has the name of the temp file used to create a
+		//tmptablename now has the name of the temp file used to create a
 		//result set. the "master" table.
 		String tmptablename = executeQuery(sql, SelectFilter.FORRESULTSET);
 		
@@ -350,22 +332,17 @@ public class SelectFilter extends SQLFilter implements AshpoolSQLFilter {
 				);
 				
 				//process the sql fragment
-				jf.createXPath(join[i]);
-				
-				/* System.out.println(jf);
-				System.out.println(tmptablename + " " 
-					+ new File(tableman.getDatastore().getAbsolutePath() + "/" + tmptablename + ".xml").exists()
-				); */
+				join_filter.createXPath(join[i]);
 				
 				//set up the sheet params
 				bXSL.clearParams();
 				bXSL.setParam("datastore", "file://" + tableman.getDatastore().getAbsolutePath());
-				bXSL.setParam("j1", jf.getJoinField1());
-				bXSL.setParam("j2", jf.getJoinField2());
+				bXSL.setParam("j1", join_filter.getJoinField1());
+				bXSL.setParam("j2", join_filter.getJoinField2());
 				bXSL.setParam("t1", tmptablename);
-				bXSL.setParam("t2", jf.getTableName());
-				bXSL.setParam("type", jf.getType());
-				bXSL.setParam("dir", jf.getDirection());
+				bXSL.setParam("t2", join_filter.getTableName());
+				bXSL.setParam("type", join_filter.getType());
+				bXSL.setParam("dir", join_filter.getDirection());
 				
 				//run the sheet
 				java.io.InputStream fakexml = new java.io.ByteArrayInputStream(
@@ -401,7 +378,7 @@ public class SelectFilter extends SQLFilter implements AshpoolSQLFilter {
 		//long ttime = System.currentTimeMillis();
 		
 		AResultSet schema = new AResultSet();
-		getTableColumns(tf.getTableName(), schema);
+		getTableColumns(table_filter.getTableName(), schema);
 		
 		//run the results through the XML->ResultSet
 		xmlfilter = new XMLtoResultSetFilter(reader, ars, schema);
@@ -427,12 +404,12 @@ public class SelectFilter extends SQLFilter implements AshpoolSQLFilter {
 		//this is kind of kludgy. If wherefilter is null then this is prolly
 		//the first call, so make all our needed filters. (hopefully this
 		//will speed things up a bit)
-		if(wf == null){
-			wf  = new WhereFilter(tableman, comman);
-			cf  = new ColumnFilter(tableman, comman);
-			of  = new OrderFilter(tableman, comman);
-			tf  = new TableFilter(tableman, comman);
-			jf  = new JoinFilter(tableman, comman);
+		if(where_filter == null){
+			where_filter  = new WhereFilter(tableman, comman);
+			column_filter  = new ColumnFilter(tableman, comman);
+			order_filter  = new OrderFilter(tableman, comman);
+			table_filter  = new TableFilter(tableman, comman);
+			join_filter  = new JoinFilter(tableman, comman);
 		}
 		
 		String select[] = new String[]{"",""};
@@ -478,37 +455,33 @@ public class SelectFilter extends SQLFilter implements AshpoolSQLFilter {
 			/* System.out.println("Select: " + 
 				Functions.unplaceHoldStrings(select[1],savedStrings)
 			);*/
-			fieldclause = cf.createXPath(
+			fieldclause = column_filter.createXPath(
 				Functions.unplaceHoldStrings(select[1],savedStrings)
 			);
-			doDistinct = cf.getDistinctFlag();
+			doDistinct = column_filter.getDistinctFlag();
 		}
 		
 		if(from.length > 1){
 			//System.out.println("From: " + from[1]);
-			of.setTable(tf.createXPath(from[1]));
-			mainfile = tf.getTableName();
+			order_filter.setTable(table_filter.createXPath(from[1]));
+			mainfile = table_filter.getTableName();
 		}
 		
 		if(join.length > 1){
 			for(int i=1; i<join.length; i++){
 				join[i] = Functions.unplaceHoldStrings(join[i],savedStrings);
-				//System.out.println("j: " + 
-				//	Functions.unplaceHoldStrings(join[i],savedStrings)
-				//);
 			}
 		}
 		
 		if(where.length > 1){
-			//System.out.println("Where: " + where[1]);
-			whereclause = wf.createXPath(
+			whereclause = where_filter.createXPath(
 				Functions.unplaceHoldStrings(where[1],savedStrings)
 			);
 		}
 		
 		if(order.length > 1){
 			//System.out.println("Order: " + order[1]);
-			orderbyclause = of.createXPath(order[1]);
+			orderbyclause = order_filter.createXPath(order[1]);
 		}
 		
 		
@@ -522,7 +495,7 @@ public class SelectFilter extends SQLFilter implements AshpoolSQLFilter {
 					+ SF_XSLT
 					+ orderbyclause
 					+ AS_XSLT
-					+ cf.getLimit()
+					+ column_filter.getLimit()
 					+ ASL_XSLT
 					+ AW_XSLT;
 				
@@ -532,67 +505,22 @@ public class SelectFilter extends SQLFilter implements AshpoolSQLFilter {
 					
 				//else build the column list
 				}else{
-					int fds = cf.getColumnNames().size();
+					int fds = column_filter.getColumnNames().size();
 					String valuepart = "";
 					for(int i=0; i<fds; i++){
-						valuepart = cf.getColumnValues().get(i).toString().replaceAll("\\$ASH_REPLACE_AGG", whereclause).trim();
-						
+						valuepart = column_filter.getColumnValues().get(i).toString().replaceAll("\\$ASH_REPLACE_AGG", whereclause).trim();
 						
 						newSheet +=
-							xslif_start + cf.getColumnNames().get(i).toString() + xslif_close
-							+ element_start + cf.getColumnNames().get(i).toString() + element_close
+							xslif_start + column_filter.getColumnNames().get(i).toString() + xslif_close
+							+ element_start + column_filter.getColumnNames().get(i).toString() + element_close
 							+ value_of_start + valuepart + value_of_end
 							+ element_end
 							+ xslif_end;
-							/*B_COL + cf.getColumnNames().get(i).toString()
-							+ S_COL + valuepart.replaceAll("['\\( \\)\\/+\\-\\*,\\[\\]]","")
-							+ O_COL //+ valuepart.replaceAll("'","")
-							+ T_COL + valuepart.replaceAll("['\\( \\)\\/+\\-\\*,\\[\\]]","")
-							+ C_COL + valuepart
-							+ E_COL;*/
 					}
 				}
 				
 				newSheet += AL_XSLT;
 				return newSheet;
-				
-				//}else{
-					/*if(fieldclause.length() > 0){
-						System.out.println(fieldclause.toString());
-						
-					//else build the column list
-					}else{
-						int fds = fieldDis.size();
-						for(int i=0; i<fds; i++){
-							System.out.println(fieldDis.get(i).toString());
-							System.out.println(fieldVal.get(i).toString().replaceAll("\\$ASH_REPLACE_AGG", whereclause.toString()));
-						}
-					}
-					
-					System.out.println(whereclause.toString());
-					
-					int q = joinfromc.size();
-					for(int x=0; x<q; x++){
-						System.out.println(joinfromc.get(x).toString());
-						System.out.println(jointable.get(x).toString());
-						System.out.println(jointoc.get(x).toString());
-					}*/
-					
-					//this will change to the new join way... :)
-					//return ""; //S_XSLT 
-					//+ whereclause.toString()
-					//+ SF_XSLT 
-					//+ orderbyclause.toString() 
-					//+ AS_XSLT 
-					//+ AW_XSLT_JOIN + fieldclause.toString()
-					//+ AL_XSLT_JOIN + joinfromc.get(0).toString()
-					//+ AL_XSLT_JOINC + jointable.get(0).toString()
-					//+ AL_XSLT_JOINT + jointoc.get(0).toString()
-					//+ AL_XSLT_JOINF + whereclause.toString()
-					//+ AL_XSLT_JOINF2 + orderbyclause.toString()
-					//+ AL_XSLT_JOINFS + fieldclause.toString()
-					//+ AL_XSLT_JOINFL;
-				//}
 				
 			case SelectFilter.FORSINGLE:
 				//the result of this should only be one text node value from 
@@ -602,8 +530,8 @@ public class SelectFilter extends SQLFilter implements AshpoolSQLFilter {
 					+ whereclause.toString()
 					+ SF_XSLT1 
 					+ orderbyclause.toString() 
-					+ AS_XSLT1 + cf.getLimit()
-					+ AW_XSLT1 + cf.getColumnValues().get(0).toString()
+					+ AS_XSLT1 + column_filter.getLimit()
+					+ AW_XSLT1 + column_filter.getColumnValues().get(0).toString()
 					+ AL_XSLT1;
 		}
 		
@@ -648,65 +576,6 @@ public class SelectFilter extends SQLFilter implements AshpoolSQLFilter {
 	+ "<xsl:template match=\"text()\"/>"
 	+ "</xsl:stylesheet>";
 	///////////////////////////////////////////////////////////////////////////
-	
-	//<xsl:element name="id">
-	//private static final String B_COL = "<xsl:element name=\""; //AS part
-	//private static final String S_COL = "\">"
-		//+ "<xsl:choose>"
-		//+ "<xsl:when test=\"not("; // value part (id)
-		//+ "<xsl:when test=\""; // value part (id)
-	
-	//private static final String O_COL = " instance of xs:string) and "; //value part (id)
-	//private static final String O_COL = "/*[1] instance of element() "; //value part (id)
-	
-	//private static final String T_COL = "\">"
-	//private static final String T_COL = "/*[name() != '']\">"
-		//+ "<xsl:copy-of select=\""; //value part (id)
-	//private static final String C_COL = "/*\"/>"
-		//+ "</xsl:when>"
-		//+ "<xsl:otherwise>"
-		//	 + "<xsl:value-of select=\""; //value part
-	//private static final String E_COL = "\"/>"
-		//+ "</xsl:otherwise>"
-		//+ "</xsl:choose>"
-	//+ "</xsl:element>";
-	
-	//<xsl:copy-of select=\"";
-	//private static final String E_COL = "\"/></xsl:element>";
-	
-	
-	///////////////////////////////////////////////////////////////////////////
-	//private static final String AW_XSLT_JOIN =
-	//            "<xsl:variable name=\"table1\" select=\"./"; /* [name() = 'firstname' or name() = 'lastname'] */
-				
-	//private static final String AL_XSLT_JOIN ="\"/>"
-		
-	//	+ "<xsl:variable name=\"join1\" select=\""; /* 'join from column' */
-				
-	//private static final String AL_XSLT_JOINC ="\"/>"
-	//		+ "<xsl:variable name=\"table2\" select=\"document(concat($datastore,'/','"; /* join to table */
-				
-	//private static final String AL_XSLT_JOINT =".xml'))/*/*["; /* join to column */
-	
-	//private static final String AL_XSLT_JOINF = " = $join1]"; /* limit the selected table name = 'blarg' (where) */
-	
-	//private static final String AL_XSLT_JOINF2 = "\"/>"
-	//	+ "<xsl:for-each select=\"$table2\">";
-	
-	//private static final String AL_XSLT_JOINFS =
-	  //            "<r>"
-	//		+ "<xsl:copy-of select=\"$table1\"/>"
-	//		+ "<xsl:variable name=\"pos\" select=\"position()\"/>"
-	//		+ "<xsl:copy-of select=\"$table2[$pos]/"; /* limit join columns [name()=] */
-						
-	// private static final String AL_XSLT_JOINFL = "\"/>"
-	//	+ "</r>"
-		//        + "</xsl:for-each>"
-	
-	//+ "</xsl:template>"
-	
-	//+ "<xsl:template match=\"text()\"/>"
-	//+ "</xsl:stylesheet>";
 	
 	//////////////////////////////////////////////////////////////////////////////
 	//I know this is crazy duplicated!

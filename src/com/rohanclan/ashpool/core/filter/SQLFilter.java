@@ -35,24 +35,21 @@ import com.rohanclan.ashpool.core.xml.BasicXSLEngine;
  * super class for all sql filters
  * @author  rob
  */
-public class SQLFilter 
-{	
+public class SQLFilter {	
 	protected TableManager tableman;
 	protected String mainfile;
 	protected CommandManager comman;
+	
 	protected BasicXSLEngine bXSL;
 	
 	/** Creates a new instance of SQLFilter */
 	public SQLFilter(){;}
 	
-	public SQLFilter(TableManager tman, CommandManager com) 
-	{
+	public SQLFilter(TableManager tman, CommandManager com) {
 		tableman = tman;
 		comman = com;
-		if(bXSL == null)
-		{
+		if(bXSL == null) {
 			bXSL = com.getXSLEngine();
 		}
 	}
-
 }

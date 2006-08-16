@@ -26,7 +26,10 @@
 
 package com.rohanclan.ashpool.core;
 
+import java.io.BufferedInputStream;
+import java.io.File;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -250,50 +253,32 @@ public class CommandManager
 	 */
 	private boolean fatal = false;
 	
-	public AResultSet executeSQLStatement(String query) throws Exception{
+	public AResultSet executeSQLStatement(String query) throws Exception {
 		int i=0;
-		try{
-			//get a fresh resultset
-			//queryresults.reset();
-			
-			//if the query has multi statements in it break it up
-			//ArrayList statements = new ArrayList();
-			
+		try {
 			String[] statements = query.split(";");
 			
-			//StringTokenizer sto_states = new StringTokenizer(query,";");
-			
-			//put it in an arrayList
-			/* while(sto_states.hasMoreTokens()){
-				String tmp = sto_states.nextToken();
-				//System.out.println("made " + tmp);
-				if(tmp.length() > 0)
-					statements.add(tmp);
-			} */
-			
 			//and do each statement by it's self
-			for(i=0; i<statements.length; i++){  //i<statements.size(); i++){
+			for(i=0; i<statements.length; i++){
 			
 				//if this or any other sub-process (a called procedure for
 				//example) blew up we should stop everything.
 				//Since this function is called recursivly, we need to know
 				//when an error some where else happened.
-				if(fatal) break;
+				if(fatal) 
+					break;
 			
-				//query = ((String)statements.get(i)).trim();
 				query = statements[i].trim();
-				
-				//System.out.println("N" + i + " of " + statements.size() + " " + query);
 				
 				//ignore commments
 				if(query.startsWith("--")) continue;
 				
 				//run any BSF commands before we do any string replacements
-				if(query.startsWith("%")){
-					if(bsf != null){
+				if(query.startsWith("%")) {
+					if(bsf != null) {
 						bsf.setScript(query.trim().substring(1));
 						bsf.doAction();
-					}else{
+					} else {
 						throw new SQLException(
 							"scripting libraries do not seem to exist key % is disabled"
 						);
@@ -352,9 +337,8 @@ public class CommandManager
 				query = query.replaceAll("<", "&lt;");
 				query = query.replaceAll(">", "&gt;");
 				
-				if(query.length() <= 0) continue;
-				
-				//System.out.println("QS: " + query);
+				if(query.length() <= 0) 
+					continue;
 				
 				//we should be able to tokenize now
 				StringTokenizer stok = new StringTokenizer(query," ");
@@ -370,22 +354,19 @@ public class CommandManager
 				}
 				
 				//execute the command or list of commands
-				if(firstkeyword.equals("drop")){
-					if(secondkeyword.toLowerCase().equals("table")){
+				if(firstkeyword.equals("drop")) {
+					if(secondkeyword.toLowerCase().equals("table")) {
 						tableman.doDropTable(stok.nextToken());
-					}else if(secondkeyword.toLowerCase().equals("procedure")){
+					} else if(secondkeyword.toLowerCase().equals("procedure")) {
 						tableman.doDropProcedure(stok.nextToken());
-					}else{
+					} else {
 						throw new SQLException("I don't understand the command: " + query);
 					}
-				}else if(firstkeyword.equals("done")){
+				} else if(firstkeyword.equals("done")) {
 					break;
-					
-				//}else if(firstkeyword.equals("return")){
-				//	return queryresults;
-					
+				
 				//execute a stored procedure
-				}else if(firstkeyword.equals("exec")){
+				} else if(firstkeyword.equals("exec")) {
 					String proccommand = query.substring(4).trim();
 					
 					StringBuffer storedproc = new StringBuffer();
@@ -404,17 +385,9 @@ public class CommandManager
 					}
 					
 					//read the procs contents
-					java.io.BufferedInputStream isr = new java.io.BufferedInputStream(
+					BufferedInputStream isr = new BufferedInputStream(
 						tableman.getProcedureInputStream(proc)
 					);
-					/* java.io.InputStreamReader isr = new java.io.InputStreamReader(
-						tableman.getProcedureInputStream(proc)
-					); */
-					
-					/* char buffer[] = new char[64];
-					while((isr.read(buffer)) != -1){
-						storedproc.append(buffer);
-					} */
 					
 					int ch;
 					while( (ch = isr.read()) != -1 ){
@@ -433,79 +406,71 @@ public class CommandManager
 					queryresults = executeSQLStatement(storedproc.toString());
 					
 				//if it looks like a select statement
-				}else if(firstkeyword.equals("select")){
+				}else if(firstkeyword.equals("select")) {
 					String tname;
+					queryresults.reset();
+					
 					//command to get a list of available tables?
-					if(query.toLowerCase().trim().equals("select tables")){
-						queryresults.reset();
+					if(query.toLowerCase().trim().equals("select tables")) {
 						tableman.getTables(queryresults);
 						
-					}else if(query.toLowerCase().trim().equals("select procedures")){
-						queryresults.reset();
+					} else if(query.toLowerCase().trim().equals("select procedures")) {
 						tableman.getProcedures(queryresults);
 						
 					//currently supported database types?
-					}else if(query.toLowerCase().trim().equals("select types")){
-						queryresults.reset();
+					} else if(query.toLowerCase().trim().equals("select types")) {
 						create_filter.getSupportedDataTypes(queryresults);
 					
 					//command to get a simple test ResultSet
-					}else if(query.toLowerCase().trim().equals("select test")){
-						queryresults.reset();
+					} else if(query.toLowerCase().trim().equals("select test")) {
 						queryresults.setQuickResultSet("Test_Query", "This is the result");
 					
-					}else if(query.toLowerCase().trim().equals("select env")){
-						queryresults.reset();
+					} else if(query.toLowerCase().trim().equals("select env")) {
 						List<Object> names = new ArrayList<Object>(variables.keySet());
 						List<Object> values = new ArrayList<Object>(variables.values());
-						//List names = new ArrayList(globalvariables.keySet());
-						//List values = new ArrayList(globalvariables.values());
-						queryresults.addColumn("name", names, java.sql.Types.VARCHAR);
-						queryresults.addColumn("value", values, java.sql.Types.VARCHAR);
+						queryresults.addColumn("name", names, Types.VARCHAR);
+						queryresults.addColumn("value", values, Types.VARCHAR);
 						
-						//return queryresults;
 						continue;
 					
 					//selecting the columns from a table. WARNING this seems a bit
 					//risky as the command is "select columns <tablename>" very close
 					//to a normal query!
-					}else if(secondkeyword.toLowerCase().equals("columns")
-						&& !(tname = stok.nextElement().toString()).toLowerCase().equals("from")){
+					} else if(secondkeyword.toLowerCase().equals("columns")
+						&& !(tname = stok.nextElement().toString()).toLowerCase().equals("from")) {
 					
 						//try to send it to a select filter
-						queryresults.reset();
 						select_filter.getTableColumns(tname, queryresults);
-					}else{
+					} else {
 						//fill the pass recordset with the passed sql query
-						queryresults.reset();
 						select_filter.executeQuery(query, queryresults);
 					}
 					
-				}else if(firstkeyword.equals("set")){
+				} else if(firstkeyword.equals("set")) {
 					setVariableString(query.substring(3).trim());
 					
-				}else if(firstkeyword.equals("unset")){
+				} else if(firstkeyword.equals("unset")) {
 					removeVariable(secondkeyword.trim()); 
 					
-				}else if(firstkeyword.equals("update")){
+				} else if(firstkeyword.equals("update")) {
 					//doesnt return anything
 					update_filter.executeQuery(query, queryresults);
 					
-				}else if(firstkeyword.equals("delete")){
+				} else if(firstkeyword.equals("delete")) {
 					//doesnt return anything
 					delete_filter.executeQuery(query, queryresults);
 					
-				}else if(firstkeyword.equals("insert")){
+				} else if(firstkeyword.equals("insert")) {
 					//doesnt return anything
 					insert_filter.executeQuery(query, queryresults);
 					
-				}else if(firstkeyword.equals("create")){
+				} else if(firstkeyword.equals("create")) {
 					//doesnt return anything
-					if(secondkeyword.toLowerCase().equals("table")){
+					if(secondkeyword.toLowerCase().equals("table")) {
 						create_filter.executeQuery(query, queryresults);
 					}
 					
-					if(secondkeyword.toLowerCase().equals("database")){
+					if(secondkeyword.toLowerCase().equals("database")) {
 						//create database [dbname] [[root_user] [password] [encryption_type]]
 						String dbname = stok.nextToken();
 						//String ruser  = 
@@ -515,67 +480,35 @@ public class CommandManager
 						//String enctype = 
 						stok.nextToken();
 						
-						try{
-							java.io.File newdb = new java.io.File(dbname);
+						try {
+							File newdb = new File(dbname);
 							//if the dir is not there try to make it
-							if(!newdb.exists()){ newdb.mkdir(); }
-							
-							//This is a hack. Can't figure out how others do this, but 
-							//this tries to load the Globals.class just to see if it's there
-							//if it's not it'll throw a catchable error - else try to load 
-							//the crypto libraries (not included in the open version)
-							/* java.io.BufferedInputStream bis = new java.io.BufferedInputStream(
-								getClass().getResourceAsStream("/com/rohanclan/crypto/Globals.class")
-							); */
-							//int there = bis.read();
-							
-							//Class glbs = Class.forName("com.rohanclan.ashpool.core.TableManagerCrypto");
-							
-							//defaults to DES
-							//com.rohanclan.ashpool.core.TableManagerCrypto tmc =
-							//	(com.rohanclan.ashpool.core.TableManagerCrypto)glbs.newInstance();
-							
-							//tmc.setDataStore(newdb);
-							//tmc.fireUpCrypto();
-							
-							//tmc.setAlgorithm(enctype);
-							
-							/* while(password.length() % 8 != 0){
-								password += " ";
-							} */
-							
-							//String key = com.rohanclan.crypto.Globals.asHex(password.getBytes());
-							//System.out.println("key: " + key);
-							
-							//tmc.setKey(password);
-							
-							//this.setTableManager(tmc);
-							
-						//}catch(java.io.IOException ioe){
-							//hack to catch non loaded crypt files
-						}catch(Exception e){
+							if(!newdb.exists()) { 
+								newdb.mkdir(); 
+							}
+						} catch(Exception e) {
 							//e.printStackTrace(System.err);
-							throw new SQLException("Crypto Error: " + e.toString());
+							throw new SQLException("Create Error: " + e.toString());
 						}
 						
 						continue;
 					}
 					
-				}else if(firstkeyword.equals("alter")){
-					if(secondkeyword.toLowerCase().equals("sequence")){
+				} else if(firstkeyword.equals("alter")) {
+					if(secondkeyword.toLowerCase().equals("sequence")) {
 						tableman.setSequenceStart(stok.nextToken(), Integer.parseInt(stok.nextToken()));
 					}
 					
-				}else if(firstkeyword.equals("import")){
+				} else if(firstkeyword.equals("import")) {
 					//import [type] [url] [name]
-					if(secondkeyword.toLowerCase().equals("table")){
-						Import imp = new Import(stok.nextToken(),stok.nextToken(),TableManager.TYPE_TABLE,tableman);
+					if(secondkeyword.toLowerCase().equals("table")) {
+						Import imp = new Import(stok.nextToken(), stok.nextToken(), TableManager.TYPE_TABLE, tableman);
 						imp.doAction();
-					}else if(secondkeyword.toLowerCase().equals("procedure")){
-						Import imp = new Import(stok.nextToken(),stok.nextToken(),TableManager.TYPE_PROC,tableman);
+					} else if(secondkeyword.toLowerCase().equals("procedure")){
+						Import imp = new Import(stok.nextToken(), stok.nextToken(), TableManager.TYPE_PROC, tableman);
 						imp.doAction();
 					}else if(secondkeyword.toLowerCase().equals("schema")){
-						Import imp = new Import(stok.nextToken(),stok.nextToken(),TableManager.TYPE_SCHEMA,tableman);
+						Import imp = new Import(stok.nextToken(), stok.nextToken(), TableManager.TYPE_SCHEMA, tableman);
 						imp.doAction();
 					}
 					
@@ -595,9 +528,7 @@ public class CommandManager
 					//}
 					
 				}else{
-					throw new SQLException(
-						firstkeyword + " is an unknown keyword or it was used incorrectly"
-					);
+					throw new SQLException(firstkeyword + " is an unknown keyword or it was used incorrectly");
 				}
 			}
 			return queryresults;

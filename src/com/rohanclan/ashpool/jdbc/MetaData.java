@@ -401,15 +401,11 @@ public class MetaData implements java.sql.DatabaseMetaData {
 	 * @see #getSearchStringEscape
 	 *
 	 */
-	public java.sql.ResultSet getColumns(String catalog, String schemaPattern, 
-			String tableNamePattern, String columnNamePattern) throws SQLException {
+	public ResultSet getColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
 		try{
-			return conn.getConnectionManager().executeStatement(
-				"select columns " + tableNamePattern
-			);
-		}catch(Exception e){
-			throw new SQLException("Can't get columns for " + tableNamePattern 
-				+ " because " + e.toString()
+			return conn.getConnectionManager().executeStatement("select columns " + tableNamePattern);
+		} catch(Exception e) {
+			throw new SQLException("Can't get columns for " + tableNamePattern 	+ " because " + e.toString()
 			);
 		}
 	}

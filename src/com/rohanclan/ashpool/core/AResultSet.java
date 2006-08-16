@@ -26,6 +26,7 @@
 
 package com.rohanclan.ashpool.core;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Blob;
@@ -370,7 +371,7 @@ public class AResultSet implements java.sql.ResultSet {
 	 * @exception SQLException if a database access error occurs
 	 *
 	 */
-	public java.io.InputStream getAsciiStream(String columnName) throws SQLException {
+	public InputStream getAsciiStream(String columnName) throws SQLException {
 		return null;
 	}
 	
@@ -397,7 +398,7 @@ public class AResultSet implements java.sql.ResultSet {
 	 * @exception SQLException if a database access error occurs
 	 *
 	 */
-	public java.io.InputStream getAsciiStream(int columnIndex) throws SQLException {
+	public InputStream getAsciiStream(int columnIndex) throws SQLException {
 		return null;
 	}
 	
@@ -487,7 +488,7 @@ public class AResultSet implements java.sql.ResultSet {
 	 * @exception SQLException if a database access error occurs
 	 *
 	 */
-	public java.io.InputStream getBinaryStream(int columnIndex) throws SQLException {
+	public InputStream getBinaryStream(int columnIndex) throws SQLException {
 		return null;
 	}
 	
@@ -512,7 +513,7 @@ public class AResultSet implements java.sql.ResultSet {
 	 * @exception SQLException if a database access error occurs
 	 *
 	 */
-	public java.io.InputStream getBinaryStream(String columnName) throws SQLException {
+	public InputStream getBinaryStream(String columnName) throws SQLException {
 		return null;
 	}
 	
