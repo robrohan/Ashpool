@@ -44,8 +44,7 @@ import com.rohanclan.ashpool.core.ConnectionManager;
  * This is the basic commandline DBMS for Ashpool.
  * @author  rob
  */
-public class Ashpool 
-{
+public class Ashpool {
 	//the prompt
 	private static final String p1 = "Ashpool~# ";
 	//private static final String p2 = "Ashpool~> ";
@@ -66,13 +65,11 @@ public class Ashpool
 	private OutputStream stdout;
 	
 	/** Creates a new instance of Ashpool */
-	public Ashpool(String datauri) 
-	{	
-		try
-		{
+	public Ashpool(String datauri) {	
+		try	{
 			System.out.println("Datastore : [" + datauri + "]");
 			File source = new File(datauri);
-			if(!source.exists()){
+			if(!source.exists()) {
 				throw new AshpoolException(
 					"The directory '" + datauri + "' doesn't exist. Please create it before pointing Ashpool to it"
 				);
@@ -86,9 +83,7 @@ public class Ashpool
 			//build the command list
 			commands = new java.util.HashMap<String, AshpoolCmd>();
 			buildCommandList();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			System.err.println("Startup Error: " + e.toString());
 			e.printStackTrace(System.err);
 			System.exit(1);
@@ -96,15 +91,13 @@ public class Ashpool
 	}
 	
 	/** starts the main program loop */
-	public void startup()
-	{
+	public void startup() {
 		running = true;
 		startMainProgramLoop();
 	}
 	
 	/** load all the default commands */
-	private void buildCommandList()
-	{
+	private void buildCommandList() {
 		commands.put("quit",                 new Ashpool.Quit());
 		commands.put("help",                 new Ashpool.Help());
 		commands.put("sys",                  new Ashpool.Memory());
@@ -114,33 +107,26 @@ public class Ashpool
 		commands.put("system_run",           new Ashpool.Run());
 		commands.put("echo_run",             new Ashpool.Echo());
 		commands.put("about",                new About());
-		try
-		{
+		try	{
 			commands.put("bsf_run",          new RunBSF(this));
 			System.out.println("Scripting : [  OK  ]");
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			System.out.println("Scripting : [ Fail ]");
 		}
-		
 	}
 	
-	public ConnectionManager getConnectionManager()
-	{
+	public ConnectionManager getConnectionManager() {
 		return connMan;
 	}
 	
 	/** set where the input and output goes */
-	public void setInputOutput(InputStream in, OutputStream out)
-	{
+	public void setInputOutput(InputStream in, OutputStream out) {
 		stdin = in;
 		stdout = out;
 	}
 	
 	/** set the script file to execute */
-	public void setScriptFile(String scriptfile)
-	{
+	public void setScriptFile(String scriptfile) {
 		this.scriptfile = scriptfile;
 		interactive = false;
 	}
@@ -148,8 +134,7 @@ public class Ashpool
 	/** all should be setup now - this starts running commands or shows the 
 	 * prompt for interactive mode 
 	 */
-	public void startMainProgramLoop()
-	{
+	public void startMainProgramLoop() {
 		StringBuffer commandbuff;
 		String command;
 		
@@ -159,61 +144,47 @@ public class Ashpool
 		println("");
 		print(p1);
 		
-		try
-		{
+		try {
 			//if there in no script file provided, use System.in
 			//no log file set to stdout
-			if(scriptfile == null)
-			{
+			if(scriptfile == null) {
 				setInputOutput(System.in, System.out);
-			}
-			else
-			{
+			} else {
 				setInputOutput(new FileInputStream(scriptfile), System.out);
 				logprint("Using File: [" + this.scriptfile + "]");
 			}
 			
-			while(running)
-			{
+			while(running) {
 				commandbuff = new StringBuffer();
 				boolean inAQuote = false;
 				boolean keepreading = true;
 				
 				//while( (char)in != ';' && !inAQuote ){
-				while(keepreading)
-				{
+				while(keepreading) {
 					in = stdin.read();
 					
 					//check if we need to switch the in quote flag
-					if((char)in == '\'')
-					{
+					if((char)in == '\'') {
 						//if in a quote get out
-						if(inAQuote)
-						{
+						if(inAQuote) {
 							inAQuote = false;
 						//if not in a quote go into a quote
-						}
-						else if(!inAQuote)
-						{
+						} else if(!inAQuote) {
 							inAQuote = true;
 						}
 					}
 					
 					//add to the command buffer
 					commandbuff.append((char)in);
-					if(in == '\n' && interactive)
-					{
+					if(in == '\n' && interactive) {
 						print(p1);
 					}
 					
 					//if we didnt hit a ; or we did hit a ; but we are in
 					//quoted text keep reading
-					if( (char)in != ';' || ( (char)in == ';' && inAQuote) )
-					{
+					if( (char)in != ';' || ( (char)in == ';' && inAQuote) )	{
 						keepreading = true;
-					}
-					else
-					{
+					} else {
 						keepreading = false;
 					}
 				}
@@ -225,8 +196,7 @@ public class Ashpool
 				//look to see if it's just a command (i.e. quit, help, etc and
 				//if so handle it
 				Object runner = commands.get(command.toString().trim().toLowerCase());
-				if(runner != null)
-				{
+				if(runner != null) {
 					((AshpoolCmd)runner).doAction();
 				}
 				
@@ -283,11 +253,13 @@ public class Ashpool
 		}
 	}
 	
+	
 	/** draws a "line" */
 	public void drawLine(String pattern, int length){
 		repeat(pattern, length);
 		println("");
 	}
+	
 
 	/** cause I am lazy */
 	public void print(String msg){
@@ -295,6 +267,7 @@ public class Ashpool
 			System.out.print(msg);
 		}
 	}
+	
 
 	/** cause I am lazy */
 	public void println(String msg){
@@ -302,6 +275,7 @@ public class Ashpool
 			System.out.println(msg);
 		}
 	}
+	
 	/** some things should not be logged, i.e. only
 	 * make sence in interactive mode - but some things 
 	 * should show in both contexts - those items use
@@ -350,6 +324,7 @@ public class Ashpool
 						print("+"); repeat("=",52); println("+");
 		}
 	}
+	
 
 	final class Memory implements AshpoolCmd{
 		long freeMemory;
@@ -413,6 +388,7 @@ public class Ashpool
 		}
 	}
 	
+	
 	class RunSQL implements AshpoolCmd{
 		AResultSet qresults;
 		public RunSQL(){;}
@@ -473,6 +449,7 @@ public class Ashpool
 			}
 		}
 	}
+	
 		
 	class Quit implements AshpoolCmd{
 		public Quit(){;}
@@ -481,6 +458,7 @@ public class Ashpool
 			System.exit(0);
 		}
 	}
+	
 	
 	class GC implements AshpoolCmd{
 		public GC(){;}
@@ -491,6 +469,7 @@ public class Ashpool
 			logprint("[ Done ]");
 		}
 	}
+	
 	
 	/** runs a script */
 	class Run implements AshpoolCmd{
@@ -516,6 +495,7 @@ public class Ashpool
 		}
 	}
 	
+	
 	/** echo command */
 	class Echo implements AshpoolCmd {
 		String msg="";
@@ -533,6 +513,7 @@ public class Ashpool
 		}
 	}
 	
+	
 	/** exits a script and goes to interactive mode */
 	class Done implements AshpoolCmd{
 		public Done(){;}
@@ -544,12 +525,11 @@ public class Ashpool
 		}
 	}
 	
+	
 	/////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////
-	public static void main(String args[])
-	{
-		if(args.length < 1)
-		{
+	
+	public static void main(String args[]) {
+		if(args.length < 1) {
 			System.out.println(
 				"Usage: java -jar Ashpool.jar [datastore] <scriptfile>"
 			);
@@ -557,17 +537,14 @@ public class Ashpool
 		}
 		
 		System.out.println("+===============================+");
-		System.out.println("|    Ashpool  \u00ABXML Database\u00BB    |");
-		System.out.println("|   Copyright 2003  Rob Rohan   |");
+		System.out.println("|     Ashpool XML Database      |");
+		System.out.println("|    (c)2003-2006 Rob Rohan     |");
 		System.out.println("+===============================+");
 		
 		Ashpool boot = new Ashpool(args[0]);
 		
-		if(args.length >= 2)
-		{
+		if(args.length >= 2) {
 			boot.setScriptFile(args[1]);
 		}
-		
 		boot.startup();
-	}
-}
+	}}
