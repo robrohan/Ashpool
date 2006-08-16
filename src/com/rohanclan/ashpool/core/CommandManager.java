@@ -49,19 +49,16 @@ import com.rohanclan.ashpool.core.xml.BasicXSLEngine;
  */ 
 public class CommandManager 
 {
-	//private static final byte SQL_TYPE = 0;
-	//private static final byte XSL_TYPE = 1;
-	
 	/** the select filter */
-	public SelectFilter sf;
+	public SelectFilter select_filter;
 	/** the create filter */
-	public CreateFilter cf;
+	public CreateFilter create_filter;
 	/** the insert filter */
-	public InsertFilter inf;
+	public InsertFilter insert_filter;
 	/** the delete filter */
-	public DeleteFilter df;
+	public DeleteFilter delete_filter;
 	/** the update filter */
-	public UpdateFilter uf;
+	public UpdateFilter update_filter;
 	
 	private AResultSet queryresults;
 	private BasicXSLEngine bXSL;
@@ -76,17 +73,18 @@ public class CommandManager
 	private RunBSF bsf = null;
 	
 	/** Creates a new instance of CommandManager */
-	public CommandManager() 
-	{
+	public CommandManager() {
+		//what we are going to pass back to the driver
 		queryresults = new AResultSet();
+		
+		//the engine used to query the table... not really query by execute...
 		bXSL = new BasicXSLEngine();
 		
 		//new local variable scope
 		variables = new HashMap<String, Object>();
 		
 		//if no global scope, make one
-		if(globalvariables == null)
-		{
+		if(globalvariables == null) {
 			globalvariables = new HashMap<String,Object>();
 			//system specific variables
 			globalvariables.put("SYS:DEBUG",new Boolean(false));
@@ -95,37 +93,26 @@ public class CommandManager
 		//variables.put("DEBUG",new Boolean(false));
 		
 		//if bsf is loaded or we don't know if it is try to load it
-		if(getGlobalVariable("SYS:BSF") == null || ((Boolean)getGlobalVariable("SYS:BSF")).booleanValue() == true)
-		{ 
-			try
-			{
+		if(getGlobalVariable("SYS:BSF") == null || ((Boolean)getGlobalVariable("SYS:BSF")).booleanValue() == true) { 
+			try {
 				bsf = new RunBSF(this);
 				globalvariables.put("SYS:BSF",new Boolean(true));
-			}
-			catch(Exception e)
-			{
+			} catch(Exception e) {
 				globalvariables.put("SYS:BSF",new Boolean(false));
 			}
 		}
 	}
 	
 	/** get access to the table manager */
-	public void setTableManager(TableManager tman) throws Exception 
-	{
+	public void setTableManager(TableManager tman) throws Exception {
 		tableman = tman;
 		
 		//we will, more than likely, need a some filters.
-		sf = new SelectFilter(tableman, this);
-		//sf.setXSLEngine(bXSL);
-		cf = new CreateFilter(tableman, this);
-		//cf.setXSLEngine(bXSL);
-		
-		df = new DeleteFilter(tableman, this);
-		//df.setXSLEngine(bXSL);
-		
-		inf = new InsertFilter(tableman, this);
-		uf = new UpdateFilter(tableman, this);
-		//uf.setXSLEngine(bXSL);
+		select_filter = new SelectFilter(tableman, this);
+		create_filter = new CreateFilter(tableman, this);
+		delete_filter = new DeleteFilter(tableman, this);
+		insert_filter = new InsertFilter(tableman, this);
+		update_filter = new UpdateFilter(tableman, this);
 	}
 	
 	public BasicXSLEngine getXSLEngine()
@@ -136,29 +123,29 @@ public class CommandManager
 	/** gets the select filter */
 	public SelectFilter getSelectFilter()
 	{
-		return sf;
+		return select_filter;
 	}
 	
 	/** gets the create filter */
 	public CreateFilter getCreateFilter()
 	{
-		return cf;
+		return create_filter;
 	}
 	
 	/** gets the Insert filter */
 	public InsertFilter getInsertFilter()
 	{
-		return inf;
+		return insert_filter;
 	}
 	
 	public UpdateFilter getUpdateFilter()
 	{
-		return uf;
+		return update_filter;
 	}
 	
 	public DeleteFilter getDeleteFilter()
 	{
-		return df;
+		return delete_filter;
 	}
 	
 	/** gets the table manager */
@@ -166,28 +153,25 @@ public class CommandManager
 		return tableman;
 	}
 	
-	public Map getVariables()
-	{
+	public Map getVariables() {
 		return variables;
 	}
 	
-	public void setVariable(String name, Object value)
-	{
+	public void setVariable(String name, Object value) {
 		variables.put(name,value);
 	}
 	
-	public Object getVariable(String name)
-	{
+	public Object getVariable(String name) {
 		return variables.get(name);
 	}
 	
-	public void removeVariable(String name){
+	public void removeVariable(String name) {
 		if(variables.containsKey(name)){ // && !name.equals("DEBUG")
 			variables.remove(name);
 		}
 	}
 	
-	public Map getGlobalVariables(){
+	public Map getGlobalVariables() {
 		return globalvariables;
 	}
 	
@@ -245,7 +229,7 @@ public class CommandManager
 		if(value.startsWith("(")){
 			variables.put(
 				varname,
-				sf.executeQuery(
+				select_filter.executeQuery(
 					replaceVariables(value.substring(1,value.length()-1)),
 					SelectFilter.FORSINGLE
 				)
@@ -265,6 +249,7 @@ public class CommandManager
 	 * depending on how crazy I want to let the sql statments get
 	 */
 	private boolean fatal = false;
+	
 	public AResultSet executeSQLStatement(String query) throws Exception{
 		int i=0;
 		try{
@@ -436,10 +421,6 @@ public class CommandManager
 						storedproc.append((char)ch);
 					}
 					
-					
-					
-					
-					
 					//if there are any variables to set, try to set them
 					if(procparts != null){
 						int plen = procparts.length;
@@ -466,7 +447,7 @@ public class CommandManager
 					//currently supported database types?
 					}else if(query.toLowerCase().trim().equals("select types")){
 						queryresults.reset();
-						cf.getSupportedDataTypes(queryresults);
+						create_filter.getSupportedDataTypes(queryresults);
 					
 					//command to get a simple test ResultSet
 					}else if(query.toLowerCase().trim().equals("select test")){
@@ -493,11 +474,11 @@ public class CommandManager
 					
 						//try to send it to a select filter
 						queryresults.reset();
-						sf.getTableColumns(tname, queryresults);
+						select_filter.getTableColumns(tname, queryresults);
 					}else{
 						//fill the pass recordset with the passed sql query
 						queryresults.reset();
-						sf.executeQuery(query, queryresults);
+						select_filter.executeQuery(query, queryresults);
 					}
 					
 				}else if(firstkeyword.equals("set")){
@@ -508,20 +489,20 @@ public class CommandManager
 					
 				}else if(firstkeyword.equals("update")){
 					//doesnt return anything
-					uf.executeQuery(query, queryresults);
+					update_filter.executeQuery(query, queryresults);
 					
 				}else if(firstkeyword.equals("delete")){
 					//doesnt return anything
-					df.executeQuery(query, queryresults);
+					delete_filter.executeQuery(query, queryresults);
 					
 				}else if(firstkeyword.equals("insert")){
 					//doesnt return anything
-					inf.executeQuery(query, queryresults);
+					insert_filter.executeQuery(query, queryresults);
 					
 				}else if(firstkeyword.equals("create")){
 					//doesnt return anything
 					if(secondkeyword.toLowerCase().equals("table")){
-						cf.executeQuery(query, queryresults);
+						create_filter.executeQuery(query, queryresults);
 					}
 					
 					if(secondkeyword.toLowerCase().equals("database")){
@@ -646,15 +627,14 @@ public class CommandManager
 	
 	/** Help out GC by nulling out everything we own */
 	public void nullify(){
-		sf = null;
-		cf = null;
-		inf = null;
-		df = null;
-		uf = null;
+		select_filter = null;
+		create_filter = null;
+		insert_filter = null;
+		delete_filter = null;
+		update_filter = null;
 		bXSL = null;
 		tableman = null;
 		variables = null;
 		bsf = null;
 	}
-	
 }

@@ -107,7 +107,7 @@ public class SetFilter extends SQLFilter{
 						}
 						//is this really a subquery or a jacked function call?
 						if(subq.toString().length() > 6){
-							insertColumnValues.add(comman.sf.executeQuery(
+							insertColumnValues.add(comman.select_filter.executeQuery(
 								subq.toString(),SelectFilter.FORSINGLE).toString().trim()
 							);
 						}

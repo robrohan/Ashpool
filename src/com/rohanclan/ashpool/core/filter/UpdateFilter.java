@@ -47,16 +47,10 @@ import com.rohanclan.ashpool.core.xml.BasicXSLEngine;
  * @author  rob
  */
 public class UpdateFilter extends SQLFilter implements AshpoolSQLFilter {
-
-	//private List insertColumnNames;
-	//private List insertColumnValues;
-	//private java.util.Random rand;
 	
-	//private Validator val;
-	
-	private WhereFilter wf;
-	private SetFilter sf;
-	private TableFilter tf;
+	private WhereFilter where_filter;
+	private SetFilter set_filter;
+	private TableFilter table_filter;
 	
 	
 	/** Creates a new instance of UpdateFilter */
@@ -151,12 +145,12 @@ public class UpdateFilter extends SQLFilter implements AshpoolSQLFilter {
 		//this is kind of kludgy. If wherefilter is null then this is prolly
 		//the first call, so make all our needed filters. (hopefully this
 		//will speed things up a bit)
-		if(wf == null){
-			wf  = new WhereFilter(tableman, comman);
+		if(where_filter == null){
+			where_filter  = new WhereFilter(tableman, comman);
 			//cf  = new ColumnFilter(tableman, comman);
 			//of  = new OrderFilter(tableman, comman);
-			sf = new SetFilter(tableman, comman);
-			tf  = new TableFilter(tableman, comman);
+			set_filter = new SetFilter(tableman, comman);
+			table_filter  = new TableFilter(tableman, comman);
 		}
 		
 		String where[] = new String[]{"",""};
@@ -190,7 +184,7 @@ public class UpdateFilter extends SQLFilter implements AshpoolSQLFilter {
 		
 		if(where.length > 1){
 			//System.out.println("where: " + where[1]);
-			whereclause.append(wf.createXPath(
+			whereclause.append(where_filter.createXPath(
 				Functions.unplaceHoldStrings(where[1],savedStrings)
 			));
 			//System.out.println(whereclause);
@@ -205,13 +199,13 @@ public class UpdateFilter extends SQLFilter implements AshpoolSQLFilter {
 			//put the proper text back in (so we get good values)
 			set[1] = Functions.unplaceHoldStrings(set[1],savedStrings);
 			//try to parse out column & values
-			sf.getColumnsAndValues(set[1], insertColumnNames, insertColumnValues);
+			set_filter.getColumnsAndValues(set[1], insertColumnNames, insertColumnValues);
 			//System.out.println(insertColumnNames + " " + insertColumnValues);
 		}
 		
 		if(update.length > 1){
-			tf.createXPath(update[1]);
-			mainfile = tf.getTableName();
+			table_filter.createXPath(update[1]);
+			mainfile = table_filter.getTableName();
 			//System.out.println("update: " + mainfile);
 		}
 		
@@ -223,11 +217,11 @@ public class UpdateFilter extends SQLFilter implements AshpoolSQLFilter {
 		AResultSet ars = new AResultSet();
 		
 		//now get a ResultSet of all the columns this table should have
-		comman.sf.getTableColumns(mainfile, ars);
+		comman.select_filter.getTableColumns(mainfile, ars);
 	
 		//get the row marker and table marker for insert
-		String rowmarker = comman.sf.getRowMarker(mainfile);
-		String tablemarker = comman.sf.getTableMarker(mainfile);
+		String rowmarker = comman.select_filter.getRowMarker(mainfile);
+		String tablemarker = comman.select_filter.getTableMarker(mainfile);
 	
 		//loop over all the columns and build the fragment
 		//check for data validity as well

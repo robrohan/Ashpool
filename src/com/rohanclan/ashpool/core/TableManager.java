@@ -535,10 +535,8 @@ public class TableManager {
 		if(!fhndl.delete()){
 			fhndl.deleteOnExit();
 			throw new Exception("Failed to drop the object for some file system reason. Will try to delete on exit.");
-		}
-		
+		}	
 	}
-	
 	
 	public void doDropProcedure(String procname) throws Exception {
 		doDropDBObject(procname,TableManager.TYPE_PROC);

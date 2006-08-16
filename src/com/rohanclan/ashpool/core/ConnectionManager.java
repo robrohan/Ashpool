@@ -36,7 +36,7 @@ import java.io.File;
 public class ConnectionManager 
 {	
 	private TableManager tableman;
-	private CommandManager comman;
+	//private CommandManager comman;
 	private AResultSet ars; //scratch pad result set
 	
 	/** Creates a new instance of ConnectionManager */
@@ -50,58 +50,65 @@ public class ConnectionManager
 	public void setTableManager(TableManager tm) throws Exception
 	{
 		tableman = tm;
-		comman = new CommandManager();
-		comman.setTableManager(tableman);
+		//comman = new CommandManager();
+		//comman.setTableManager(tableman);
+		
 		ars = new AResultSet();
 	}
 	
 	/** gets a handle to the table manager */
-	public TableManager getTableManager()
-	{
+	public TableManager getTableManager() {
 		return this.tableman;
 	}
 	
-	public CommandManager getCommandManager() throws Exception 
-	{
+	/**
+	 * Gets a new CommandManager and sets the table manager to the
+	 * to the table manager defined in this connection.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public CommandManager getCommandManager() throws Exception {
 		CommandManager freshcomman = new CommandManager();
-		freshcomman.setTableManager(tableman);
+		freshcomman.setTableManager(this.tableman);
 		
 		return freshcomman;
 	}
 	
 	/** gets a list of tables in the datastore */
-	public AResultSet getTables(String[] types){
+	public AResultSet getTables(String[] types) {
 		ars.reset();
 		getTableManager().getTables(ars, types);
 		return ars;
 	}
 	
-	public AResultSet getTables(){
+	public AResultSet getTables() {
 		ars.reset();
 		getTableManager().getTables(ars);
 		return ars;
 	}
 	
-	public AResultSet getProcedures(){
+	public AResultSet getProcedures() {
 		ars.reset();
 		getTableManager().getProcedures(ars);
 		return ars;
 	}
 	
-	/** executes a query string */
+	/** 
+	 * Executes a query string and returns the result set. This is the main
+	 * in from the JDBC driver
+	 */
 	public AResultSet executeStatement(String query) throws Exception {
 		//get a new commandmanager and execute the query (so local vars are local)
-		//get a fresh commandmanager
 		CommandManager tmpexe = getCommandManager();
+		
 		//execute the query
 		AResultSet ars = tmpexe.executeStatement(query);
+		
 		//null out the fresh command manager (help out GC)
 		tmpexe.nullify();
-		
-		//return comman.executeStatement(query);
-		
+				
 		return ars;
-		//return comman.executeStatement(query);
 	}
 	
 	/** executes a query string */
@@ -110,15 +117,27 @@ public class ConnectionManager
 		return null;
 	}
 	
-	public String getNumericFunctions(){
+	/**
+	 * For the JDBC driver to get a list of all Numeric style functions
+	 * @return
+	 */
+	public String getNumericFunctions() {
 		return Functions.getAllMathFunctions();
 	}
 	
-	public String getStringFunctions(){
+	/**
+	 * For the JDBC driver to get a list of all the string functions
+	 * @return
+	 */
+	public String getStringFunctions() {
 		return Functions.getAllMiscFunctions() + "," + Functions.getAllStandardFunctions(); 
 	}
 	
-	public String getDateTimeFunctions(){
+	/**
+	 * For the JDBC driver to get a list of the datetime functions
+	 * @return
+	 */
+	public String getDateTimeFunctions() {
 		return "now," + Functions.getAllDateFunctions();
 	}
 }

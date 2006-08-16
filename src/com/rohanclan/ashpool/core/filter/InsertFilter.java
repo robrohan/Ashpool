@@ -217,7 +217,7 @@ public class InsertFilter extends SQLFilter implements AshpoolSQLFilter {
 						}
 						//is this really a subquery or a jacked function call?
 						if(subq.toString().length() > 6){
-							insertColumnValues.add(comman.sf.executeQuery(
+							insertColumnValues.add(comman.select_filter.executeQuery(
 								subq.toString(),SelectFilter.FORSINGLE).toString().trim()
 							);
 						}
@@ -233,11 +233,11 @@ public class InsertFilter extends SQLFilter implements AshpoolSQLFilter {
 			}
 			
 			//now get a ResultSet of all the columns this table should have
-			comman.sf.getTableColumns(mainfile, ars);
+			comman.select_filter.getTableColumns(mainfile, ars);
 			
 			//get the row marker and table marker for insert
-			String rowmarker = comman.sf.getRowMarker(mainfile);
-			String tablemarker = comman.sf.getTableMarker(mainfile);
+			String rowmarker = comman.select_filter.getRowMarker(mainfile);
+			String tablemarker = comman.select_filter.getTableMarker(mainfile);
 			
 			//the insert string, the row document fragment
 			StringBuffer insString = new StringBuffer();
