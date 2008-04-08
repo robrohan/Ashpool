@@ -39,22 +39,7 @@
 		makes a larger file, but scripting makes ashpool cool :) 
 	<target name="jar_with_scripting" depends="build">
 		<jar destfile="Ashpool.jar" 
-			basedir="src"
-			manifest="Ashpool.manifest"
-		>
-			<include name="com/**/*.class"/>
-			<include name="com/**/*.properties"/>
-			<include name="net/**/*.class"/>
-			<include name="org/**/*.class"/>
-			<include name="org/**/*.properties"/>
-		</jar>
-	</target> -->
-
-	<!-- create an Ashpool jar with the bsf and js jars in it.
-		makes a larger file, but scripting makes ashpool cool :) -->
-	<!-- <target name="jar_with_scripting_and_crypto" depends="build">
-		<jar destfile="Ashpool.jar" 
-			basedir="."
+			basedir="bin"
 			manifest="Ashpool.manifest"
 		>
 			<include name="com/**/*.class"/>
@@ -67,8 +52,9 @@
 
 	<!-- remove all the class files -->
  	<target name="clean" description="clean up" >
-		<delete>
-			<fileset dir="bin" includes="com/rohanclan/ashpool/**/*.class" />
+		<delete includeemptydirs="true">
+			<fileset dir="bin" includes="**/*" />
 		</delete>
+		<delete file="Ashpool.jar"/>
 	</target>
 </project>
