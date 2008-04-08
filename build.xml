@@ -18,7 +18,7 @@
 			classpath="${libdir}/bsf.jar:${libdir}/js.jar:./"
 		/>
 	</target>
-
+	
 	<!-- create an Ashpool jar without the bsf.jar and js.jar
 		built into the jar (smaller file but no scripting unless
 		you add the two to the classpath -->
