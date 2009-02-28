@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
  * @author  rob
  */
 public class Functions 
-{	
+{
 	public static List<String> stdfunctions    = new ArrayList<String>();
 	public static List<String> datefunctions   = new ArrayList<String>();
 	public static List<String> mathfunctions   = new ArrayList<String>();

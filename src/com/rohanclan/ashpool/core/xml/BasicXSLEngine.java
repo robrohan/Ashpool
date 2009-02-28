@@ -30,11 +30,8 @@ import java.util.List;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
-//import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-
-//import org.apache.xalan.processor.TransformerFactoryImpl;
 
 /**
  * A basic xslt transforming engine. Just applies an XSLT style sheet to an 
@@ -48,13 +45,11 @@ public class BasicXSLEngine {
 	 
 	/** which transformer to use: xalan by default */
 	public static String XSLTFactory = "javax.xml.transform.TransformerFactory";
-	//public static String SAXFactory  = "";
 	//this shouldn't be hard coded really, but on mac System.getProperty("org.xml.sax.driver")
 	//seems to always be null.
 	public static String SAXDriver = "org.apache.crimson.parser.XMLReaderImpl";
 	
 	/** the params to pass to the style sheet */
-	//public java.util.Vector params;
 	public List<String> params;
 	
 	/** Creates a new instance of BasicXSLEngine */
@@ -69,11 +64,6 @@ public class BasicXSLEngine {
 	{
 		XSLTFactory = factory;
 	}
-	
-	/** change the sax factory (call doFactoryRest) */
-	/* public void setSAXFactory(String factory){
-		SAXFactory = factory;
-	} */
 	
 	/** set a single param */
 	public void setParam(String name, String value)
@@ -117,10 +107,9 @@ public class BasicXSLEngine {
 		//String media = null;
 		
 		 //get an instance and make a result object
-		TransformerFactory tfactory = /*net.sf.saxon.TransformerFactoryImpl*/javax.xml.transform.TransformerFactory.newInstance();
+		TransformerFactory tfactory = javax.xml.transform.TransformerFactory.newInstance();
 		strResult = new StreamResult(output);
 		
-		//SAXTransformerFactory stf = (SAXTransformerFactory) tfactory;
 		Templates stylesheet = tfactory.newTemplates(new StreamSource(xslin));
 		Transformer transformer = stylesheet.newTransformer();
 			

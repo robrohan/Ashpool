@@ -120,8 +120,7 @@ public class XMLtoResultSetFilter extends org.xml.sax.helpers.XMLFilterImpl {
 	}
 	
 	/** handle start elements */
-	public void startElement(String uri, String localName, String qName, Attributes attr) 
-		throws SAXException{
+	public void startElement(String uri, String localName, String qName, Attributes attr) throws SAXException{
 		//System.out.println(localName);
 		try{
 			//the start of the result set should be wrapped in something
@@ -167,6 +166,7 @@ public class XMLtoResultSetFilter extends org.xml.sax.helpers.XMLFilterImpl {
 	/** handle element data */
 	public void characters(char ch[], int start, int length) throws SAXException {
 		for(int x=start; x<(start+length); x++){
+			//System.err.println(ch[x]);
 			ResValue.append(ch[x]);
 		}
 	}
@@ -187,6 +187,7 @@ public class XMLtoResultSetFilter extends org.xml.sax.helpers.XMLFilterImpl {
 				
 				//((java.util.List)trc.columnData).add(ResValue.toString().trim());
 				trc.columnData.add(ResValue.toString());
+				//System.err.println(ResValue.toString());
 				
 				/* switch(trc.getType()){
 					case java.sql.Types.INTEGER:

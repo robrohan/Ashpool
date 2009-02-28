@@ -359,14 +359,14 @@ public class InsertFilter extends SQLFilter implements AshpoolSQLFilter {
 					//get the writer to write it to the original file
 					//(these both use SAX btw)
 					java.io.OutputStreamWriter osw = new java.io.OutputStreamWriter(
-						tableman.getTableOutputStream(tmpfile,TableManager.TYPE_TABLE)
+						tableman.getTableOutputStream(tmpfile, TableManager.TYPE_TABLE),
+						"UTF-8"
 					);
 					
-					XMLWriter writer = new XMLWriter(
-						xif, osw
-					);
+					XMLWriter writer = new XMLWriter(xif, osw);
 					
 					InputSource inputsource = new InputSource();
+					inputsource.setEncoding("UTF-8");
 					inputsource.setByteStream(is);
 					
 					writer.parse(inputsource);
@@ -376,7 +376,7 @@ public class InsertFilter extends SQLFilter implements AshpoolSQLFilter {
 					is.close();
 					
 					//now move the temp file to the real filename (commit)
-					tableman.getTableFile(mainfile,TableManager.TYPE_TABLE).delete();
+					tableman.getTableFile(mainfile, TableManager.TYPE_TABLE).delete();
 					tableman.renameTable(tmpfile, mainfile);
 					
 				}catch(Exception e){

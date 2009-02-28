@@ -65,7 +65,7 @@ public class Ashpool {
 	private OutputStream stdout;
 	
 	/** Creates a new instance of Ashpool */
-	public Ashpool(String datauri) {	
+	public Ashpool(String datauri) {
 		try	{
 			System.out.println("Datastore : [" + datauri + "]");
 			File source = new File(datauri);
@@ -253,14 +253,12 @@ public class Ashpool {
 		}
 	}
 	
-	
 	/** draws a "line" */
 	public void drawLine(String pattern, int length){
 		repeat(pattern, length);
 		println("");
 	}
 	
-
 	/** cause I am lazy */
 	public void print(String msg){
 		if(interactive){
@@ -268,7 +266,6 @@ public class Ashpool {
 		}
 	}
 	
-
 	/** cause I am lazy */
 	public void println(String msg){
 		if(interactive){
@@ -291,9 +288,8 @@ public class Ashpool {
 		}
 	}
 	
-	
 	/////Commands//////////////////////////////////////////////////////////////
-	final class Help implements AshpoolCmd{
+	final class Help implements AshpoolCmd {
 		public Help(){;}
 		
 		public void doAction(){
@@ -325,8 +321,7 @@ public class Ashpool {
 		}
 	}
 	
-
-	final class Memory implements AshpoolCmd{
+	final class Memory implements AshpoolCmd {
 		long freeMemory;
 		long totalMemory;
 		long maxMemory;
@@ -388,8 +383,7 @@ public class Ashpool {
 		}
 	}
 	
-	
-	class RunSQL implements AshpoolCmd{
+	class RunSQL implements AshpoolCmd {
 		AResultSet qresults;
 		public RunSQL(){;}
 		
@@ -450,8 +444,7 @@ public class Ashpool {
 		}
 	}
 	
-		
-	class Quit implements AshpoolCmd{
+	class Quit implements AshpoolCmd {
 		public Quit(){;}
 		public void doAction() throws Exception{
 			running = false;
@@ -459,8 +452,7 @@ public class Ashpool {
 		}
 	}
 	
-	
-	class GC implements AshpoolCmd{
+	class GC implements AshpoolCmd {
 		public GC(){;}
 		
 		public void doAction() throws Exception{
@@ -470,9 +462,8 @@ public class Ashpool {
 		}
 	}
 	
-	
 	/** runs a script */
-	class Run implements AshpoolCmd{
+	class Run implements AshpoolCmd {
 		String scriptfile;
 		public Run(){;}
 		
@@ -495,7 +486,6 @@ public class Ashpool {
 		}
 	}
 	
-	
 	/** echo command */
 	class Echo implements AshpoolCmd {
 		String msg="";
@@ -513,9 +503,8 @@ public class Ashpool {
 		}
 	}
 	
-	
 	/** exits a script and goes to interactive mode */
-	class Done implements AshpoolCmd{
+	class Done implements AshpoolCmd {
 		public Done(){;}
 		
 		public void doAction() throws Exception 
@@ -524,7 +513,6 @@ public class Ashpool {
 			interactive = true;
 		}
 	}
-	
 	
 	/////////////////////////////////////////////////////////////////////////
 	
@@ -538,7 +526,7 @@ public class Ashpool {
 		
 		System.out.println("+===============================+");
 		System.out.println("|     Ashpool XML Database      |");
-		System.out.println("|   (c) 2003-2006 Rob Rohan     |");
+		System.out.println("|   (c) 2003-2008 Rob Rohan     |");
 		System.out.println("+===============================+");
 		
 		Ashpool boot = new Ashpool(args[0]);

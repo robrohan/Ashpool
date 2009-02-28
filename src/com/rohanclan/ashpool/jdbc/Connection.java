@@ -59,7 +59,7 @@ public class Connection implements java.sql.Connection {
 		try
 		{
 			conMan = new ConnectionManager(datastore);
-						
+			
 			//check to see if this database managed (i.e. has the system tables
 			//for login and such
 			AResultSet ar = conMan.executeStatement("select tables");

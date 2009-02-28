@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <project name="Ashpool" default="jar" basedir=".">
 	
-	<property name="debug" value="false"/>
-	<property name="optimize" value="true"/>
+	<property name="debug" value="true"/>
+	<property name="optimize" value="false"/>
 	<property name="libdir" value="lib"/>
 	
 	<!-- compile all the needed files -->

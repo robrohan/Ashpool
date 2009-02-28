@@ -35,7 +35,7 @@ import com.rohanclan.ashpool.core.xml.BasicXSLEngine;
  * super class for all sql filters
  * @author  rob
  */
-public class SQLFilter {	
+public class SQLFilter {
 	protected TableManager tableman;
 	protected String mainfile;
 	protected CommandManager comman;

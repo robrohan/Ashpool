@@ -1216,7 +1216,9 @@ public class AResultSet implements java.sql.ResultSet {
 	 */
 	public String getString(int columnIndex) throws SQLException {
 		try{
-			return ((ResultColumn)resultTable.get(columnIndex - 1)).columnData.get(currentrow).toString();
+			return (
+				(ResultColumn)resultTable.get(columnIndex - 1)
+			).columnData.get(currentrow).toString();
 		}catch(Exception e){
 			throw new SQLException("AResult::getString(int): column or selection past result set?" + columnIndex);
 		}

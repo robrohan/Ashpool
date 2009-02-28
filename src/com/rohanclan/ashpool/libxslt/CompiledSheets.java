@@ -266,7 +266,7 @@ public class CompiledSheets {
 +" 				dir       : join direction (not implemented 'left' or 'right')\""
 +" 		-->"
 +" 		<xsl:stylesheet version=\"2.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">"
-+" 			<xsl:output method=\"xml\" indent=\"yes\" />"
++" 			<xsl:output encoding=\"UTF-8\" method=\"xml\" indent=\"yes\" />"
 +" 			"
 +" 			<xsl:param name=\"datastore\" select=\"'file:///mnt/fileserver/projects/Ashpool/10minutes'\"/>"
 +" 			<xsl:param name=\"j1\" select=\"'vend_id'\"/>"

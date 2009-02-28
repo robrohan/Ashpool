@@ -185,6 +185,7 @@ public class SelectFilter extends SQLFilter implements AshpoolSQLFilter {
 		
 		//make an out an in
 		InputSource inputSource = new InputSource( new ByteArrayInputStream(baos.toByteArray()) );
+		inputSource.setEncoding("UTF-8");
 	
 		//fill in the resultset with the trasfrom results
 		xmlfilter.parse(inputSource);
@@ -346,7 +347,7 @@ public class SelectFilter extends SQLFilter implements AshpoolSQLFilter {
 				
 				//run the sheet
 				java.io.InputStream fakexml = new java.io.ByteArrayInputStream(
-					"<?xml version=\"1.0\" ?><zzzzzzzzzzzzz></zzzzzzzzzzzzz>".getBytes()
+					"<?xml version=\"1.0\" encoding=\"utf-8\" ?><zzzzzzzzzzzzz></zzzzzzzzzzzzz>".getBytes()
 				);
 				
 				//get a handle to the join sheet
@@ -368,11 +369,13 @@ public class SelectFilter extends SQLFilter implements AshpoolSQLFilter {
 		}
 		
 		java.io.BufferedInputStream is = new java.io.BufferedInputStream(
-			tableman.getTableInputStream(tmptablename,TableManager.TYPE_TABLE)
+			tableman.getTableInputStream(tmptablename, TableManager.TYPE_TABLE)
 		);
 		//java.io.InputStream is = tableman.getTableInputStream(tmptablename,TableManager.TYPE_TABLE);
 		
 		InputSource inputSource = new InputSource(is);
+		inputSource.setEncoding("UTF-8");
+		//System.out.println(inputSource.getEncoding());
 		
 		//resultset build timer
 		//long ttime = System.currentTimeMillis();
