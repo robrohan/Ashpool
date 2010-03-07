@@ -299,4 +299,14 @@ public class AResultSetMetaData implements java.sql.ResultSetMetaData {
 	public boolean isWritable(int column) throws SQLException {
 		return true;
 	}
+
+	public boolean isWrapperFor(Class<?> iface) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public <T> T unwrap(Class<T> iface) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

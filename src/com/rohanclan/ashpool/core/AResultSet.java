@@ -27,19 +27,24 @@
 package com.rohanclan.ashpool.core;
 
 import java.io.InputStream;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.DatabaseMetaData;
+import java.sql.NClob;
 import java.sql.Ref;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.RowId;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
+import java.sql.SQLXML;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -74,6 +79,62 @@ public class AResultSet implements java.sql.ResultSet {
 		rc.type = type;
 		rc.columnData = data;
 	}
+	
+	public void updateNClob(java.lang.String s ,java.io.Reader r) {;}
+	
+	public void updateNClob(int x, java.io.Reader r) {;}
+	
+	public void updateClob(java.lang.String s,java.io.Reader r) {;}
+	
+	public void updateClob(int x,java.io.Reader r) {;}
+	
+	public void updateBlob(java.lang.String s,java.io.InputStream i) {;}
+	
+	public void updateBlob(int x, java.io.InputStream i) {;}
+	
+	public void updateCharacterStream(java.lang.String s,java.io.Reader r) {;}
+	
+	public void updateBinaryStream(java.lang.String s,java.io.InputStream i){;}
+	
+	public void updateAsciiStream(java.lang.String s,java.io.InputStream i) {;}
+	
+	public void updateCharacterStream(int x,java.io.Reader r) {;}
+	
+	public void updateBinaryStream(int x,java.io.InputStream i) {;}
+	
+	public void updateAsciiStream(int x,java.io.InputStream i){;}
+	
+	public void updateNCharacterStream(java.lang.String s,java.io.Reader r) {;}
+	
+	public void updateNCharacterStream(int x,java.io.Reader r) {;}
+	
+	public void updateNClob(java.lang.String s,java.io.Reader r,long l) {;}
+	
+	public void updateNClob(int x,java.io.Reader r,long l) {;}
+	
+	public void updateClob(java.lang.String s,java.io.Reader r,long l) {;}
+	
+	public void updateClob(int i,java.io.Reader r,long l) {;}
+	
+	public void updateBlob(java.lang.String s,java.io.InputStream i,long l) {;}
+	
+	public void updateBlob(int x,java.io.InputStream i,long l) {;}
+	
+	public void updateCharacterStream(java.lang.String s,java.io.Reader r,long l) {;}
+	
+	public void updateBinaryStream(java.lang.String s,java.io.InputStream i,long l) {;}
+	
+	public void updateAsciiStream(java.lang.String s,java.io.InputStream i,long l) {;}
+	
+	public void updateCharacterStream(int x,java.io.Reader r,long l){;}
+	
+	public void updateBinaryStream(int x,java.io.InputStream i,long l) {;}
+	
+	public void updateAsciiStream(int x,java.io.InputStream i,long l) {;}
+	
+	public void updateNCharacterStream(java.lang.String s,java.io.Reader r,long l) {;}
+	
+	public void updateNCharacterStream(int x,java.io.Reader r,long l) {;}
 	
 	/** resets this result set object so it can be reused */
 	public void reset(){
@@ -1072,9 +1133,9 @@ public class AResultSet implements java.sql.ResultSet {
 	 * @since 1.2
 	 *
 	 */
-	public Object getObject(int i, java.util.Map map) throws SQLException {
-		return null;
-	}
+	//public Object getObject(int i, java.util.Map map) throws SQLException {
+	//	return null;
+	//}
 	
 	/** Retrieves the value of the designated column in the current row
 	 * of this <code>ResultSet</code> object as an <code>Object</code>
@@ -1093,9 +1154,9 @@ public class AResultSet implements java.sql.ResultSet {
 	 * @since 1.2
 	 *
 	 */
-	public Object getObject(String colName, java.util.Map map) throws SQLException {
-		return null;
-	}
+	//public Object getObject(String colName, java.util.Map map) throws SQLException {
+	//	return null;
+	//}
 
 	/** Retrieves the value of the designated column in the current row
 	 * of this <code>ResultSet</code> object as a <code>Ref</code> object
@@ -2620,6 +2681,133 @@ public class AResultSet implements java.sql.ResultSet {
 	 */
 	public boolean wasNull() throws SQLException {
 		return false;
+	}
+
+	public int getHoldability() throws SQLException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public Reader getNCharacterStream(int columnIndex) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Reader getNCharacterStream(String columnLabel) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public NClob getNClob(int columnIndex) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public NClob getNClob(String columnLabel) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getNString(int columnIndex) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getNString(String columnLabel) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object getObject(int columnIndex, Map<String, Class<?>> map)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object getObject(String columnLabel, Map<String, Class<?>> map)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public RowId getRowId(int columnIndex) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public RowId getRowId(String columnLabel) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public SQLXML getSQLXML(int columnIndex) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public SQLXML getSQLXML(String columnLabel) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean isClosed() throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void updateNClob(int columnIndex, NClob nClob) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updateNClob(String columnLabel, NClob nClob)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updateNString(int columnIndex, String nString)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updateNString(String columnLabel, String nString)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updateRowId(int columnIndex, RowId x) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updateRowId(String columnLabel, RowId x) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updateSQLXML(int columnIndex, SQLXML xmlObject)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updateSQLXML(String columnLabel, SQLXML xmlObject)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean isWrapperFor(Class<?> iface) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public <T> T unwrap(Class<T> iface) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
