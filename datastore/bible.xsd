@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xs:element name="bible_jkv">
+		<xs:annotation>
+			<xs:documentation>Ashpool XML Database (c)2003</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="bible_txt_mst" type="ashpoolRow"/>
+	
+	<xs:complexType name="ashpoolRow">
+		<xs:sequence>
+		<xs:element name="book" type="xs:string" nillable="false" maxLength="4" maxOccurs="unbounded" />
+		<xs:element name="chapter" type="xs:integer" nillable="false" maxOccurs="unbounded" />
+		<xs:element name="verse" type="xs:integer" nillable="false" maxOccurs="unbounded" />
+		<xs:element name="txt" type="xs:string" nillable="false" maxLength="1000" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
